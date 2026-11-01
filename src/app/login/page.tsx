@@ -74,13 +74,17 @@ export default function LoginPage() {
     if (data.user) {
       // 2. Create matching profile
       const defaultTheme = persona === "boy" ? "dark" : "light";
-      await supabase.from("profiles").upsert({
-        id: data.user.id,
-        display_name: displayName,
-        persona,
-        timezone: "Asia/Kolkata",
-        theme_mode: defaultTheme,
-      });
+      try {
+        await supabase.from("profiles").upsert({
+          id: data.user.id,
+          display_name: displayName,
+          persona,
+          timezone: "Asia/Kolkata",
+          theme_mode: defaultTheme,
+        });
+      } catch (profileErr) {
+        console.warn("Client profile upsert note:", profileErr);
+      }
 
       // Save persona preference locally
       localStorage.setItem("rm-persona", persona);

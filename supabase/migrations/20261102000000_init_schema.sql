@@ -363,6 +363,10 @@ CREATE POLICY "Profiles are readable by authenticated members"
 ON public.profiles FOR SELECT TO authenticated
 USING (true);
 
+CREATE POLICY "Users can insert their own profile"
+ON public.profiles FOR INSERT TO authenticated
+WITH CHECK (auth.uid() = id);
+
 CREATE POLICY "Users can update their own profile"
 ON public.profiles FOR UPDATE TO authenticated
 USING (auth.uid() = id);
@@ -451,4 +455,41 @@ USING (auth.uid() = user_id);
 CREATE POLICY "Notifications private to user"
 ON public.notifications FOR ALL TO authenticated
 USING (auth.uid() = user_id);
+
+-- 10. Automated user profile creation trigger on signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+    INSERT INTO public.profiles (
+        id,
+        display_name,
+        persona,
+        theme_mode,
+        timezone,
+        daily_study_hours,
+        study_start_time,
+        study_days
+    )
+    VALUES (
+        new.id,
+        COALESCE(new.raw_user_meta_data->>'display_name', 'Founder'),
+        COALESCE(new.raw_user_meta_data->>'persona', 'boy'),
+        CASE WHEN COALESCE(new.raw_user_meta_data->>'persona', 'boy') = 'girl' THEN 'light' ELSE 'dark' END,
+        'Asia/Kolkata',
+        4.5,
+        '09:00',
+        '{1,2,3,4,5,6}'
+    )
+    ON CONFLICT (id) DO UPDATE SET
+        display_name = EXCLUDED.display_name,
+        persona = EXCLUDED.persona;
+    RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
 
