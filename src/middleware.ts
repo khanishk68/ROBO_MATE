@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   const { pathname } = request.nextUrl;
-  const publicRoutes = ["/login", "/auth/callback", "/auth/reset-password"];
+  const publicRoutes = ["/login", "/auth/callback", "/auth/reset-password", "/api/auth"];
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
 
   // Gracefully handle unconfigured credentials without throwing an unhandled runtime error

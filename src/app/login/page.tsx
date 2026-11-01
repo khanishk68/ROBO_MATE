@@ -53,57 +53,46 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    // 1. Sign up user
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: displayName,
-          persona,
-        },
-      },
-    });
+    try {
+      // 1. Register and auto-confirm via Server Admin API (bypasses Supabase SMTP email rate limits completely)
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, displayName, persona }),
+      });
 
-    if (error) {
-      showError("Setup failed", error.message);
-      setLoading(false);
-      return;
-    }
+      const result = await res.json();
 
-    if (data.user) {
-      // 2. Create matching profile
-      const defaultTheme = persona === "boy" ? "dark" : "light";
-      try {
-        await supabase.from("profiles").upsert({
-          id: data.user.id,
-          display_name: displayName,
-          persona,
-          timezone: "Asia/Kolkata",
-          theme_mode: defaultTheme,
-        });
-      } catch (profileErr) {
-        console.warn("Client profile upsert note:", profileErr);
+      if (!res.ok) {
+        throw new Error(result.error || "Registration failed. Please check credentials.");
       }
 
-      // Save persona preference locally
+      // 2. Automatically log the user in immediately (no email confirmation link required!)
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        showError("Setup succeeded, but sign-in failed", signInError.message);
+        setMode("signin");
+        setLoading(false);
+        return;
+      }
+
+      // Save persona & theme preference locally
+      const defaultTheme = persona === "boy" ? "dark" : "light";
       localStorage.setItem("rm-persona", persona);
       localStorage.setItem("rm-theme", defaultTheme);
 
-      if (data.session) {
-        success("Co-Founder Account Activated!", "Redirecting to your dashboard...");
-        router.push("/dashboard");
-        router.refresh();
-      } else {
-        info(
-          "Account Created!",
-          "If email confirmation is enabled in your Supabase project, check your inbox to confirm your email before signing in."
-        );
-        setMode("signin");
-      }
+      success("Co-Founder Account Activated!", "Welcome to ROBO MATES! Redirecting to dashboard...");
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err: any) {
+      showError("Setup failed", err.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleReset = async (e: React.FormEvent) => {
