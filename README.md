@@ -172,3 +172,5 @@ pnpm start
 - **Strict Two-User Enclosure**: The database schema restricts workspace membership to 2 users max. Public registrations are rejected.
 - **Service Role Isolation**: `SUPABASE_SERVICE_ROLE_KEY` is only used inside secure server API routes (e.g. background rescheduling) and is never sent to the client.
 - **AI Tutor Privacy**: Chat messages and personal study reflections are protected by Row Level Security and are only visible to the user who created them.
+#   R O B O _ M A T E  
+ 
