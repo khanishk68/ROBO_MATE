@@ -1,26 +1,429 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   ROBO MATES — Design System
+   Two personas × Two theme modes = 4 visual identities
+   ============================================================ */
+
+/* --- BOY MODE DARK (Default) --- */
+:root,
+[data-persona="boy"][data-theme="dark"] {
+  --bg-primary: #080E1C;
+  --bg-secondary: #111E32;
+  --bg-card: #0D1929;
+  --bg-elevated: #152238;
+  --border-color: #1E3A5F;
+  --border-glow: #2563EB40;
+
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --primary-foreground: #ffffff;
+  --neon: #38BDF8;
+  --neon-glow: #38BDF830;
+  --accent: #0EA5E9;
+
+  --text-primary: #E5F3FF;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #38BDF8;
+
+  --gradient-hero: linear-gradient(135deg, #080E1C 0%, #111E32 50%, #0D1929 100%);
+  --gradient-card: linear-gradient(145deg, #0D1929, #111E32);
+  --gradient-accent: linear-gradient(135deg, #2563EB, #38BDF8);
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 20px rgba(37,99,235,0.15);
+  --shadow-neon: 0 0 30px rgba(56,189,248,0.2);
+
+  --radius: 0.75rem;
 }
 
+/* --- BOY MODE LIGHT --- */
+[data-persona="boy"][data-theme="light"] {
+  --bg-primary: #F0F6FF;
+  --bg-secondary: #E8F0FE;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #F8FBFF;
+  --border-color: #BFDBFE;
+  --border-glow: #2563EB20;
+
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --primary-foreground: #ffffff;
+  --neon: #0EA5E9;
+  --neon-glow: #0EA5E920;
+  --accent: #3B82F6;
+
+  --text-primary: #0F172A;
+  --text-secondary: #1E3A5F;
+  --text-muted: #64748B;
+
+  --success: #059669;
+  --warning: #D97706;
+  --error: #DC2626;
+  --info: #2563EB;
+
+  --gradient-hero: linear-gradient(135deg, #EFF6FF 0%, #F0F6FF 50%, #DBEAFE 100%);
+  --gradient-card: linear-gradient(145deg, #ffffff, #F0F6FF);
+  --gradient-accent: linear-gradient(135deg, #2563EB, #38BDF8);
+
+  --shadow-sm: 0 1px 3px rgba(37,99,235,0.1);
+  --shadow-md: 0 4px 16px rgba(37,99,235,0.08);
+  --shadow-glow: 0 0 20px rgba(37,99,235,0.08);
+  --shadow-neon: 0 0 30px rgba(14,165,233,0.1);
+}
+
+/* --- GIRL MODE DARK --- */
+[data-persona="girl"][data-theme="dark"] {
+  --bg-primary: #1A0F14;
+  --bg-secondary: #221018;
+  --bg-card: #1E1118;
+  --bg-elevated: #27151D;
+  --border-color: #4A1E30;
+  --border-glow: #D96B9140;
+
+  --primary: #D96B91;
+  --primary-hover: #C05578;
+  --primary-foreground: #ffffff;
+  --neon: #F5B8CC;
+  --neon-glow: #F5B8CC30;
+  --accent: #E8829E;
+
+  --text-primary: #FFF0F5;
+  --text-secondary: #C9A0B0;
+  --text-muted: #8B6070;
+
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #F5B8CC;
+
+  --gradient-hero: linear-gradient(135deg, #1A0F14 0%, #221018 50%, #1E1118 100%);
+  --gradient-card: linear-gradient(145deg, #1E1118, #221018);
+  --gradient-accent: linear-gradient(135deg, #D96B91, #F5B8CC);
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 20px rgba(217,107,145,0.15);
+  --shadow-neon: 0 0 30px rgba(245,184,204,0.15);
+}
+
+/* --- GIRL MODE LIGHT --- */
+[data-persona="girl"][data-theme="light"] {
+  --bg-primary: #FFF8F6;
+  --bg-secondary: #FFF0F3;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #FFF5F7;
+  --border-color: #F9C4D2;
+  --border-glow: #D96B9120;
+
+  --primary: #D96B91;
+  --primary-hover: #C05578;
+  --primary-foreground: #ffffff;
+  --neon: #F5B8CC;
+  --neon-glow: #F5B8CC20;
+  --accent: #E8829E;
+
+  --text-primary: #2D1520;
+  --text-secondary: #80576B;
+  --text-muted: #A07080;
+
+  --success: #059669;
+  --warning: #D97706;
+  --error: #DC2626;
+  --info: #D96B91;
+
+  --gradient-hero: linear-gradient(135deg, #FFF8F6 0%, #FFF0F3 50%, #FFE4EC 100%);
+  --gradient-card: linear-gradient(145deg, #FFFFFF, #FFF8F6);
+  --gradient-accent: linear-gradient(135deg, #D96B91, #F5B8CC);
+
+  --shadow-sm: 0 1px 3px rgba(217,107,145,0.08);
+  --shadow-md: 0 4px 16px rgba(217,107,145,0.08);
+  --shadow-glow: 0 0 20px rgba(217,107,145,0.08);
+  --shadow-neon: 0 0 30px rgba(245,184,204,0.1);
+}
+
+/* ============================================================
+   THEME TOKENS → Tailwind custom properties
+   ============================================================ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-bg: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-card: var(--bg-card);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-border: var(--border-color);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-neon: var(--neon);
+  --color-accent: var(--accent);
+
+  --color-text: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-info: var(--info);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-glow: var(--shadow-glow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SCROLLBAR STYLING
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* ============================================================
+   CARD & GLASS EFFECTS
+   ============================================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-glow);
+  border-color: var(--primary);
+}
+
+.card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+.glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+[data-persona="girl"] .glass {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(245,184,204,0.15);
+}
+
+/* ============================================================
+   GRADIENT TEXT
+   ============================================================ */
+.gradient-text {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   GLOW EFFECTS (Boy Mode only)
+   ============================================================ */
+[data-persona="boy"] .neon-border {
+  border: 1px solid var(--neon);
+  box-shadow: 0 0 10px var(--neon-glow), inset 0 0 10px var(--neon-glow);
+}
+
+[data-persona="boy"] .glow-primary {
+  box-shadow: var(--shadow-glow);
+}
+
+/* ============================================================
+   PROGRESS BARS
+   ============================================================ */
+.progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-color);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--gradient-accent);
+  transition: width 0.5s ease;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* ============================================================
+   INPUT FIELDS
+   ============================================================ */
+.input-field {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--border-glow);
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   SKELETON LOADING
+   ============================================================ */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--bg-elevated) 50%,
+    var(--bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.5rem;
+}
+
+/* ============================================================
+   STATUS BADGES
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge-success { background: rgba(16,185,129,0.15); color: var(--success); }
+.badge-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
+.badge-error   { background: rgba(239,68,68,0.15);  color: var(--error); }
+.badge-info    { background: rgba(56,189,248,0.15); color: var(--info); }
+.badge-primary { background: rgba(37,99,235,0.15);  color: var(--primary); }
+
+[data-persona="girl"] .badge-info    { background: rgba(245,184,204,0.2); color: var(--neon); }
+[data-persona="girl"] .badge-primary { background: rgba(217,107,145,0.15); color: var(--primary); }
+
+/* ============================================================
+   TRANSITIONS
+   ============================================================ */
+.transition-theme {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============================================================
+   GRID BACKGROUND (Boy Mode)
+   ============================================================ */
+[data-persona="boy"] .tech-grid {
+  background-image:
+    linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px var(--neon-glow); }
+  50%       { box-shadow: 0 0 25px var(--neon-glow), 0 0 40px var(--neon-glow); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+[data-persona="boy"] .animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ============================================================
+   MOBILE SAFE AREA
+   ============================================================ */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
