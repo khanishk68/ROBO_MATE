@@ -15,9 +15,7 @@ export async function middleware(request: NextRequest) {
   // Gracefully handle unconfigured credentials without throwing an unhandled runtime error
   if (!supabaseUrl || !supabaseKey || !supabaseUrl.startsWith("http")) {
     if (!isPublicRoute) {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = "/login";
-      return NextResponse.redirect(loginUrl);
+      return NextResponse.redirect(new URL("/login", request.url));
     }
     return supabaseResponse;
   }
@@ -45,15 +43,11 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user && !isPublicRoute) {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = "/login";
-      return NextResponse.redirect(loginUrl);
+      return NextResponse.redirect(new URL("/login", request.url));
     }
 
     if (user && pathname === "/login") {
-      const dashboardUrl = request.nextUrl.clone();
-      dashboardUrl.pathname = "/dashboard";
-      return NextResponse.redirect(dashboardUrl);
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   } catch (err) {
     console.error("Middleware auth check error:", err);
