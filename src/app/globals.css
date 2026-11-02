@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-xs: 400px;
+}
+
 /* ============================================================
    ROBO MATES — Design System
    Two personas × Two theme modes = 4 visual identities
@@ -427,8 +431,32 @@ body {
 }
 
 /* ============================================================
-   MOBILE SAFE AREA
+   MOBILE OPTIMIZATIONS & SAFE AREA
    ============================================================ */
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 640px) {
+  .input-field,
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }

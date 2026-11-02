@@ -155,7 +155,7 @@ export function RobotMissionLoggerView({ userId }: RobotMissionLoggerViewProps) 
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
                 Month 1 Capstone Project • Days 27–30
               </span>
@@ -173,7 +173,7 @@ export function RobotMissionLoggerView({ userId }: RobotMissionLoggerViewProps) 
 
           {/* Test Suite Progress Indicator */}
           <div
-            className="p-4 rounded-xl border flex items-center gap-4 min-w-[220px]"
+            className="p-4 rounded-xl border flex items-center gap-4 w-full md:w-auto md:min-w-[220px]"
             style={{
               background: "var(--bg-secondary)",
               borderColor: "var(--border-color)",
@@ -546,7 +546,7 @@ export function RobotMissionLoggerView({ userId }: RobotMissionLoggerViewProps) 
             />
           </div>
 
-          <div className="flex justify-between items-center pt-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
             <a
               href={repoUrl}
               target="_blank"
@@ -561,7 +561,7 @@ export function RobotMissionLoggerView({ userId }: RobotMissionLoggerViewProps) 
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2 rounded-xl text-xs font-bold text-white transition-all flex items-center gap-1.5 shadow-md hover:scale-[1.02] active:scale-[0.98]"
+              className="px-5 py-2.5 rounded-xl text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow-md hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
               style={{ background: "var(--gradient-accent)" }}
             >
               <Save className="w-3.5 h-3.5" />

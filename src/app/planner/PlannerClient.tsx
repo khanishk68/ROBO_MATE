@@ -641,8 +641,8 @@ export function PlannerClient({ userId, profile: initialProfile, modules, today 
 
             <div className="p-3 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
               <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Focus Mode</p>
-              <p className="text-lg font-black mt-0.5 truncate" style={{ color: "var(--text-primary)" }}>
-                {effectiveSlug === "khanishk" ? "Kinematics & C++" : "Sketching & CAD"}
+              <p className="text-base sm:text-lg font-black mt-0.5 truncate" style={{ color: "var(--text-primary)" }}>
+                {effectiveSlug === "khanishk" ? (dayInfo.dayNumber <= 30 ? "Python & Git CLI" : "Kinematics & ROS 2") : "Sketching & CAD"}
               </p>
             </div>
           </div>
@@ -831,14 +831,14 @@ export function PlannerClient({ userId, profile: initialProfile, modules, today 
       )}
 
       {/* Status Filter Tabs */}
-      <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1">
-        <div className="flex items-center gap-1.5 p-1 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+      <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 no-scrollbar w-full">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl border flex-shrink-0" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
           {STATUS_FILTER_OPTIONS.map((f) => (
             <button
               key={f.value}
               type="button"
               onClick={() => setFilterStatus(f.value)}
-              className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
+              className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap flex-shrink-0"
               style={{
                 background: filterStatus === f.value ? "var(--primary)" : "transparent",
                 color: filterStatus === f.value ? "white" : "var(--text-muted)",

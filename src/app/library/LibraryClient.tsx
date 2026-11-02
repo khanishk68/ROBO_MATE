@@ -686,21 +686,21 @@ export function LibraryClient() {
                   borderColor: "var(--border-color)",
                 }}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-2 min-w-0 flex-1 mr-2">
                   <FileText className="w-4 h-4 text-red-400 flex-shrink-0" />
                   <div className="min-w-0">
-                    <h3 className="font-bold text-xs sm:text-sm truncate" style={{ color: "var(--text-primary)" }}>
+                    <h3 className="font-bold text-xs sm:text-sm truncate max-w-[180px] sm:max-w-md" style={{ color: "var(--text-primary)" }}>
                       {previewDoc.name}
                     </h3>
-                    <p className="text-[10px] truncate" style={{ color: "var(--text-muted)" }}>
+                    <p className="text-[10px] truncate max-w-[180px] sm:max-w-md" style={{ color: "var(--text-muted)" }}>
                       Month {previewDoc.monthNumber} • {previewDoc.subject}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  {/* Zoom controls */}
-                  <div className="flex items-center gap-1 border rounded-lg p-0.5" style={{ borderColor: "var(--border-color)" }}>
+                  {/* Zoom controls (visible on larger screens, mobile uses pinch-to-zoom) */}
+                  <div className="hidden sm:flex items-center gap-1 border rounded-lg p-0.5" style={{ borderColor: "var(--border-color)" }}>
                     <button
                       type="button"
                       onClick={() => setZoomLevel((z) => Math.max(50, z - 15))}

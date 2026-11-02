@@ -520,9 +520,9 @@ function MessageBubble({
         )}
       </div>
 
-      <div className={cn("group max-w-2xl relative", isUser && "items-end")}>
+      <div className={cn("group max-w-[82vw] sm:max-w-2xl min-w-0 relative", isUser && "items-end")}>
         <div
-          className="px-4 py-3 rounded-2xl text-sm"
+          className="px-4 py-3 rounded-2xl text-sm min-w-0 overflow-hidden"
           style={{
             background: isUser ? "var(--primary)" : "var(--bg-card)",
             color: isUser ? "white" : "var(--text-primary)",
@@ -530,9 +530,9 @@ function MessageBubble({
           }}
         >
           {isUser ? (
-            <p className="whitespace-pre-wrap">{msg.content}</p>
+            <p className="whitespace-pre-wrap break-words">{msg.content}</p>
           ) : (
-            <div className="prose prose-sm max-w-none">
+            <div className="prose prose-sm max-w-none min-w-0 overflow-hidden">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -542,24 +542,28 @@ function MessageBubble({
                     const isInline = !match;
                     return isInline ? (
                       <code
-                        className="px-1.5 py-0.5 rounded text-xs font-mono"
+                        className="px-1.5 py-0.5 rounded text-xs font-mono break-all"
                         style={{ background: "var(--bg-secondary)", color: "var(--neon)" }}
                       >
                         {children}
                       </code>
                     ) : (
-                      <SyntaxHighlighter
-                        style={isDark ? oneDark : oneLight}
-                        language={match[1]}
-                        PreTag="div"
-                        customStyle={{
-                          borderRadius: "0.5rem",
-                          fontSize: "0.8rem",
-                          margin: "0.75rem 0",
-                        }}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
+                      <div className="max-w-full overflow-x-auto rounded-lg">
+                        <SyntaxHighlighter
+                          style={isDark ? oneDark : oneLight}
+                          language={match[1]}
+                          PreTag="div"
+                          customStyle={{
+                            borderRadius: "0.5rem",
+                            fontSize: "0.8rem",
+                            margin: "0.75rem 0",
+                            maxWidth: "100%",
+                            overflowX: "auto",
+                          }}
+                        >
+                          {String(children).replace(/\n$/, "")}
+                        </SyntaxHighlighter>
+                      </div>
                     );
                   },
                   p: ({ children }) => (

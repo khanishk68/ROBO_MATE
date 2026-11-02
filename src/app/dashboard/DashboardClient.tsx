@@ -230,7 +230,7 @@ export function DashboardClient({
         <StatCard
           icon={<Flame className="w-4 h-4 sm:w-5 sm:h-5" />}
           label="Current Streak"
-          value={`${streak} days`}
+          value={`${streak} ${streak === 1 ? "day" : "days"}`}
           sub="daily consistency"
           color="warning"
         />
@@ -238,7 +238,7 @@ export function DashboardClient({
           icon={<TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />}
           label="365-Day Journey"
           value={`Day ${dayInfo.dayNumber}`}
-          sub={`${daysRemaining} days remaining`}
+          sub={`${daysRemaining} ${daysRemaining === 1 ? "day" : "days"} remaining`}
           color="success"
         />
       </div>
@@ -260,7 +260,11 @@ export function DashboardClient({
                 {completed} of {total} tasks done
               </p>
               <p className="text-[11px] sm:text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
-                {total - completed} remaining for today&apos;s goal
+                {total > 0 && completed >= total ? (
+                  <span className="text-emerald-400 font-semibold">All goals completed for today! 🎯</span>
+                ) : (
+                  `${total - completed} ${total - completed === 1 ? "task" : "tasks"} remaining for today's goal`
+                )}
               </p>
             </div>
             <Link href="/planner" className="w-full">
@@ -274,9 +278,9 @@ export function DashboardClient({
         {/* Today's study checklist */}
         <Card className="lg:col-span-2 w-full min-w-0">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-0.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                   <span
                     className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded border"
                     style={{
@@ -287,7 +291,7 @@ export function DashboardClient({
                   >
                     Day {dayInfo.dayNumber} of 30
                   </span>
-                  <span className="text-[11px] font-semibold text-sky-400">
+                  <span className="text-[11px] font-semibold text-sky-400 truncate">
                     {month1Day ? month1Day.topic : `Week ${dayInfo.weekNumber}`}
                   </span>
                 </div>
@@ -295,7 +299,7 @@ export function DashboardClient({
                   Today&apos;s Curriculum Checklist
                 </h3>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <Link href="/curriculum">
                   <button className="text-xs font-semibold flex items-center gap-1 hover:underline" style={{ color: "var(--text-muted)" }}>
                     Curriculum <ChevronRight className="w-3.5 h-3.5" />

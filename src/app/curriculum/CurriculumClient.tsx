@@ -140,7 +140,7 @@ export function CurriculumClient() {
 
               {/* Overall Progress Gauge */}
               <div
-                className="p-3.5 rounded-xl border flex items-center gap-4 min-w-[220px]"
+                className="p-3.5 rounded-xl border flex items-center gap-4 w-full md:w-auto md:min-w-[220px]"
                 style={{
                   background: "var(--bg-secondary)",
                   borderColor: "var(--border-color)",
@@ -173,13 +173,13 @@ export function CurriculumClient() {
 
         {/* Tab Navigation */}
         <div
-          className="flex border-b overflow-x-auto gap-2 sm:gap-4 text-xs sm:text-sm font-semibold scrollbar-none"
+          className="flex border-b overflow-x-auto gap-2 sm:gap-4 text-xs sm:text-sm font-semibold no-scrollbar w-full"
           style={{ borderColor: "var(--border-color)" }}
         >
           <button
             type="button"
             onClick={() => setActiveTab("plan")}
-            className="flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap"
+            className="flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap flex-shrink-0"
             style={{
               borderColor: activeTab === "plan" ? "var(--primary)" : "transparent",
               color: activeTab === "plan" ? "var(--primary)" : "var(--text-muted)",
@@ -191,7 +191,7 @@ export function CurriculumClient() {
           <button
             type="button"
             onClick={() => setActiveTab("equipment")}
-            className="flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap"
+            className="flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap flex-shrink-0"
             style={{
               borderColor: activeTab === "equipment" ? "var(--primary)" : "transparent",
               color: activeTab === "equipment" ? "var(--primary)" : "var(--text-muted)",
@@ -203,7 +203,7 @@ export function CurriculumClient() {
           <button
             type="button"
             onClick={() => setActiveTab("resources")}
-            className="flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap"
+            className="flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap flex-shrink-0"
             style={{
               borderColor: activeTab === "resources" ? "var(--primary)" : "transparent",
               color: activeTab === "resources" ? "var(--primary)" : "var(--text-muted)",
@@ -215,7 +215,7 @@ export function CurriculumClient() {
           <button
             type="button"
             onClick={() => setActiveTab("capstone")}
-            className="flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap"
+            className="flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap flex-shrink-0"
             style={{
               borderColor: activeTab === "capstone" ? "var(--primary)" : "transparent",
               color: activeTab === "capstone" ? "var(--primary)" : "var(--text-muted)",
@@ -402,13 +402,13 @@ export function CurriculumClient() {
                       </div>
 
                       {/* Right: Progress indicator & chevron */}
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <div className="text-right hidden xs:block">
+                      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                        <div className="text-right">
                           <div className="text-xs font-bold" style={{ color: isDayComplete ? "#34D399" : "var(--primary)" }}>
-                            {dayProgress.completed}/{dayProgress.total} items
+                            {dayProgress.completed}/{dayProgress.total} <span className="hidden sm:inline">items</span>
                           </div>
                           <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>
-                            {dayProgress.percentage}% checked
+                            {dayProgress.percentage}%<span className="hidden sm:inline"> checked</span>
                           </div>
                         </div>
 

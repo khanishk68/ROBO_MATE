@@ -115,7 +115,7 @@ export function ProgressClient({
           <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mb-1.5" />
           <p className="text-[10px] sm:text-xs truncate" style={{ color: "var(--text-muted)" }}>Study Streak</p>
           <p className="text-lg sm:text-2xl font-black mt-0.5 text-amber-400 truncate">
-            {streak} Days 🔥
+            {streak} {streak === 1 ? "Day" : "Days"} 🔥
           </p>
           <p className="text-[10px] sm:text-[11px] mt-0.5 truncate" style={{ color: "var(--text-secondary)" }}>
             Consistency record

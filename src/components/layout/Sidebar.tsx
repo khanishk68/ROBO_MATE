@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Zap,
   LogOut,
+  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,15 +26,16 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navItems = [
-  { href: "/dashboard",  label: "Dashboard",       icon: LayoutDashboard },
-  { href: "/roadmap",    label: "My Roadmap",      icon: Map },
-  { href: "/planner",    label: "Daily Planner",   icon: CalendarDays },
-  { href: "/curriculum", label: "Curriculum",      icon: BookOpen },
-  { href: "/library",    label: "Study Library",   icon: FileText },
-  { href: "/projects",   label: "Projects",        icon: FolderKanban },
-  { href: "/progress",   label: "Progress",        icon: BarChart3 },
-  { href: "/ai-tutor",   label: "AI Tutor",        icon: Bot },
-  { href: "/settings",   label: "Settings",        icon: Settings },
+  { href: "/dashboard",      label: "Dashboard",       icon: LayoutDashboard },
+  { href: "/curriculum",     label: "Curriculum",      icon: BookOpen },
+  { href: "/planner",        label: "Daily Planner",   icon: CalendarDays },
+  { href: "/roadmap",        label: "My Roadmap",      icon: Map },
+  { href: "/library",        label: "Study Library",   icon: FileText },
+  { href: "/projects",       label: "Projects",        icon: FolderKanban },
+  { href: "/ai-tutor",       label: "AI Tutor",        icon: Bot },
+  { href: "/progress",       label: "Progress",        icon: BarChart3 },
+  { href: "/shared-journey", label: "Shared Journey",  icon: Share2 },
+  { href: "/settings",       label: "Settings",        icon: Settings },
 ];
 
 export function Sidebar() {
