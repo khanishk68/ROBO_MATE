@@ -80,6 +80,7 @@ export function AITutorClient({ userId, persona: initialPersona, displayName: in
   const [loading, setLoading] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [showMobileHistory, setShowMobileHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -274,7 +275,65 @@ export function AITutorClient({ userId, persona: initialPersona, displayName: in
       </aside>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0 w-full">
+        {/* Mobile Header Bar */}
+        <div className="md:hidden flex items-center justify-between p-2.5 border-b flex-shrink-0" style={{ borderColor: "var(--border-color)", background: "var(--bg-secondary)" }}>
+          <button
+            type="button"
+            onClick={() => setShowMobileHistory(!showMobileHistory)}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-semibold"
+            style={{ background: "var(--bg-card)", borderColor: "var(--border-color)", color: "var(--text-primary)" }}
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-sky-400" />
+            <span>Chats ({conversations.length})</span>
+          </button>
+
+          <Button
+            size="sm"
+            onClick={newConversation}
+            className="text-xs py-1 px-2.5 font-bold"
+          >
+            <Plus className="w-3.5 h-3.5 mr-1" /> New Chat
+          </Button>
+        </div>
+
+        {/* Mobile History Drawer */}
+        {showMobileHistory && (
+          <div className="md:hidden p-3 border-b max-h-52 overflow-y-auto space-y-1 flex-shrink-0" style={{ borderColor: "var(--border-color)", background: "var(--bg-card)" }}>
+            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "var(--text-muted)" }}>Recent Conversations</p>
+            {conversations.length === 0 ? (
+              <p className="text-xs py-2" style={{ color: "var(--text-muted)" }}>No previous chats</p>
+            ) : (
+              conversations.map((conv) => (
+                <div
+                  key={conv.id}
+                  onClick={() => {
+                    setActiveConvId(conv.id);
+                    setShowMobileHistory(false);
+                  }}
+                  className="flex items-center justify-between p-2 rounded-lg text-xs cursor-pointer border"
+                  style={{
+                    background: activeConvId === conv.id ? "var(--primary)15" : "var(--bg-secondary)",
+                    borderColor: activeConvId === conv.id ? "var(--primary)" : "var(--border-color)",
+                    color: activeConvId === conv.id ? "var(--primary)" : "var(--text-primary)",
+                  }}
+                >
+                  <span className="truncate flex-1 mr-2">{conv.title}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteConversation(conv.id);
+                    }}
+                    className="p-1 hover:text-red-400 flex-shrink-0"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 && !loadingMessages ? (

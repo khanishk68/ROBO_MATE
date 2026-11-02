@@ -525,14 +525,14 @@ export function PlannerClient({ userId, profile: initialProfile, modules, today 
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-16">
+    <div className="space-y-4 sm:space-y-6 max-w-5xl mx-auto pb-16 w-full min-w-0">
       {/* Date Header & Calendar Navigation */}
-      <Card>
-        <CardBody className="p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border"
+      <Card className="w-full min-w-0">
+        <CardBody className="p-3.5 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+                <span className="text-[10px] sm:text-xs uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border flex-shrink-0"
                   style={{
                     background: isBoyMode ? "rgba(37,99,235,0.15)" : "rgba(217,107,145,0.15)",
                     borderColor: isBoyMode ? "rgba(56,189,248,0.4)" : "rgba(245,184,204,0.6)",
@@ -541,57 +541,60 @@ export function PlannerClient({ userId, profile: initialProfile, modules, today 
                 >
                   {effectiveSlug === "khanishk" ? "Khanishk • Robotics" : "Akshaya • Product Design"}
                 </span>
-                <span className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
+                <span className="text-[10px] sm:text-xs font-semibold truncate" style={{ color: "var(--text-muted)" }}>
                   {dayInfo.dayLabel}
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
+              <h2 className="text-lg sm:text-2xl font-black tracking-tight truncate" style={{ color: "var(--text-primary)" }}>
                 Week {dayInfo.weekNumber} • Month {dayInfo.monthNumber}
                 {dayInfo.isRestDay && " (Review & Rest Day)"}
               </h2>
             </div>
 
             {/* Date Navigator & Add Task */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => navigateDays(-1)}
-                className="p-2 rounded-xl border hover:opacity-80 transition-opacity"
-                style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)", color: "var(--text-primary)" }}
-                title="Previous Day"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto justify-between sm:justify-start pt-1 sm:pt-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => navigateDays(-1)}
+                  className="p-1.5 sm:p-2 rounded-xl border hover:opacity-80 transition-opacity"
+                  style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)", color: "var(--text-primary)" }}
+                  title="Previous Day"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
 
-              <button
-                type="button"
-                onClick={() => setSelectedDate(today)}
-                className="px-3 py-2 rounded-xl border text-xs font-bold transition-all hover:opacity-80"
-                style={{
-                  background: selectedDate === today ? "var(--primary)" : "var(--bg-secondary)",
-                  color: selectedDate === today ? "white" : "var(--text-primary)",
-                  borderColor: "var(--border-color)",
-                }}
-              >
-                Today
-              </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDate(today)}
+                  className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl border text-xs font-bold transition-all hover:opacity-80"
+                  style={{
+                    background: selectedDate === today ? "var(--primary)" : "var(--bg-secondary)",
+                    color: selectedDate === today ? "white" : "var(--text-primary)",
+                    borderColor: "var(--border-color)",
+                  }}
+                >
+                  Today
+                </button>
 
-              <button
-                type="button"
-                onClick={() => navigateDays(1)}
-                className="p-2 rounded-xl border hover:opacity-80 transition-opacity"
-                style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)", color: "var(--text-primary)" }}
-                title="Next Day"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => navigateDays(1)}
+                  className="p-1.5 sm:p-2 rounded-xl border hover:opacity-80 transition-opacity"
+                  style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)", color: "var(--text-primary)" }}
+                  title="Next Day"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
 
               <Button
                 onClick={() => {
                   setForm((f) => ({ ...f, scheduled_date: selectedDate }));
                   setShowAddModal(true);
                 }}
-                className="flex items-center gap-1.5 ml-2 font-bold"
+                size="sm"
+                className="flex items-center gap-1 font-bold text-xs"
               >
                 <Plus className="w-4 h-4" /> Add Task
               </Button>
@@ -599,7 +602,7 @@ export function PlannerClient({ userId, profile: initialProfile, modules, today 
           </div>
 
           {/* Daily Progress Bar & Summary Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t" style={{ borderColor: "var(--border-color)" }}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-4 pt-4 border-t w-full" style={{ borderColor: "var(--border-color)" }}>
             <div className="p-3 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
               <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Completion</p>
               <p className="text-lg font-black mt-0.5" style={{ color: "var(--text-primary)" }}>

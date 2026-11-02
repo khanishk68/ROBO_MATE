@@ -98,10 +98,10 @@ export function SharedJourneyClient({
   }
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-6xl mx-auto pb-12">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-6xl mx-auto pb-16 w-full min-w-0">
       {/* Collaborative Header */}
       <div
-        className="rounded-3xl border p-6 sm:p-8 relative overflow-hidden"
+        className="rounded-2xl sm:rounded-3xl border p-4 sm:p-8 relative overflow-hidden w-full min-w-0"
         style={{
           background: "var(--gradient-card)",
           borderColor: "var(--border-color)",
@@ -110,7 +110,7 @@ export function SharedJourneyClient({
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <Badge variant="primary" size="md">
                 PRIVATE SHARED WORKSPACE
               </Badge>
@@ -118,7 +118,7 @@ export function SharedJourneyClient({
                 Two Founders • One Company
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black" style={{ color: "var(--text-primary)" }}>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black" style={{ color: "var(--text-primary)" }}>
               Two Learners. Two Specializations. One Robotics Journey.
             </h1>
             <p className="text-xs sm:text-sm mt-1 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
@@ -130,36 +130,36 @@ export function SharedJourneyClient({
             size="sm"
             onClick={handleSendCheer}
             disabled={cheered}
-            className="flex-shrink-0"
+            className="flex-shrink-0 self-start sm:self-auto font-bold"
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-4 h-4 mr-1" />
             {cheered ? "Partner Cheered!" : "Send Study Cheer"}
           </Button>
         </div>
 
         {/* Combined Team Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t" style={{ borderColor: "var(--border-color)" }}>
-          <div className="p-3 rounded-2xl" style={{ background: "var(--bg-secondary)" }}>
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>Combined Study Hours</p>
-            <p className="text-2xl font-black mt-1" style={{ color: "var(--primary)" }}>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t" style={{ borderColor: "var(--border-color)" }}>
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[11px] font-semibold truncate" style={{ color: "var(--text-muted)" }}>Combined Study Hours</p>
+            <p className="text-xl sm:text-2xl font-black mt-1" style={{ color: "var(--primary)" }}>
               {totalCombinedHours || 180}+ hrs
             </p>
           </div>
-          <div className="p-3 rounded-2xl" style={{ background: "var(--bg-secondary)" }}>
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>Shared Robot Progress</p>
-            <p className="text-2xl font-black mt-1 text-emerald-400">
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[11px] font-semibold truncate" style={{ color: "var(--text-muted)" }}>Shared Robot Progress</p>
+            <p className="text-xl sm:text-2xl font-black mt-1 text-emerald-400">
               {projectPct}%
             </p>
           </div>
-          <div className="p-3 rounded-2xl" style={{ background: "var(--bg-secondary)" }}>
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>Combined Modules</p>
-            <p className="text-2xl font-black mt-1" style={{ color: "var(--text-primary)" }}>
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[11px] font-semibold truncate" style={{ color: "var(--text-muted)" }}>Combined Modules</p>
+            <p className="text-xl sm:text-2xl font-black mt-1" style={{ color: "var(--text-primary)" }}>
               {boyCompletedModules + girlCompletedModules} Done
             </p>
           </div>
-          <div className="p-3 rounded-2xl" style={{ background: "var(--bg-secondary)" }}>
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>Workspace Accountability</p>
-            <p className="text-2xl font-black mt-1 text-pink-400">
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[11px] font-semibold truncate" style={{ color: "var(--text-muted)" }}>Accountability</p>
+            <p className="text-xl sm:text-2xl font-black mt-1 text-pink-400">
               100% Active 🔥
             </p>
           </div>

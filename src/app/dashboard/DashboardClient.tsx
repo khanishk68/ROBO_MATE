@@ -120,30 +120,31 @@ export function DashboardClient({
   const roleTag = isKhanishk ? "⚡ Boy Mode • Robotics Lab" : "🌸 Girl Mode • Product Studio";
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-6xl mx-auto">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in max-w-6xl mx-auto w-full min-w-0">
       {/* Greeting Header */}
-      <div className="flex items-start justify-between flex-wrap gap-4 p-6 rounded-3xl border shadow-sm"
+      <div
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-sm w-full min-w-0"
         style={{
           background: "var(--bg-card)",
           borderColor: "var(--border-color)",
         }}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
           <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-lg"
+            className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-lg"
             style={{
               background: isKhanishk
                 ? "linear-gradient(135deg, #2563EB, #38BDF8)"
                 : "linear-gradient(135deg, #F5B8CC, #D96B91)",
             }}
           >
-            {isKhanishk ? <Cpu className="w-7 h-7" /> : <Palette className="w-7 h-7 text-pink-900" />}
+            {isKhanishk ? <Cpu className="w-6 h-6 sm:w-7 sm:h-7" /> : <Palette className="w-6 h-6 sm:w-7 sm:h-7 text-pink-900" />}
           </div>
 
-          <div>
-            <div className="flex items-center gap-2 mb-1">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 flex-wrap">
               <span
-                className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border"
+                className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border flex-shrink-0"
                 style={{
                   background: isKhanishk ? "rgba(37,99,235,0.15)" : "rgba(217,107,145,0.15)",
                   borderColor: isKhanishk ? "rgba(56,189,248,0.4)" : "rgba(245,184,204,0.6)",
@@ -152,60 +153,60 @@ export function DashboardClient({
               >
                 {roleTag}
               </span>
-              <span className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
+              <span className="text-[10px] sm:text-xs font-semibold truncate" style={{ color: "var(--text-muted)" }}>
                 {dayInfo.dayLabel}
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
+            <h1 className="text-lg sm:text-2xl lg:text-3xl font-black tracking-tight truncate" style={{ color: "var(--text-primary)" }}>
               {currentProfile?.display_name || (isKhanishk ? "Khanishk" : "Akshaya")}&apos;s Dashboard
             </h1>
 
-            <p className="text-xs sm:text-sm mt-0.5" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-[11px] sm:text-sm mt-0.5 truncate" style={{ color: "var(--text-secondary)" }}>
               {title} • Week {dayInfo.weekNumber} of 52 (Month {dayInfo.monthNumber})
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link href="/profile-select">
-            <Button variant="outline" size="sm">
+        <div className="flex items-center gap-2 w-full sm:w-auto flex-shrink-0 pt-1 sm:pt-0">
+          <Link href="/profile-select" className="flex-1 sm:flex-initial">
+            <Button variant="outline" size="sm" className="w-full justify-center text-xs">
               Switch Profile
             </Button>
           </Link>
-          <Link href="/roadmap">
-            <Button size="sm">
-              View Roadmap <ArrowRight className="w-3.5 h-3.5" />
+          <Link href="/roadmap" className="flex-1 sm:flex-initial">
+            <Button size="sm" className="w-full justify-center font-bold text-xs">
+              Roadmap <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </Button>
           </Link>
         </div>
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 w-full">
         <StatCard
-          icon={<Target className="w-5 h-5" />}
+          icon={<Target className="w-4 h-4 sm:w-5 sm:h-5" />}
           label="Today's Progress"
           value={`${todayPct}%`}
           sub={`${completed}/${total} tasks completed`}
           color="primary"
         />
         <StatCard
-          icon={<Clock className="w-5 h-5" />}
+          icon={<Clock className="w-4 h-4 sm:w-5 sm:h-5" />}
           label="Study Time Today"
           value={formatDuration(todayMinutes)}
           sub={`Goal: ${currentProfile?.daily_study_hours || (isKhanishk ? 5.0 : 2.75)} hrs/day`}
           color="neon"
         />
         <StatCard
-          icon={<Flame className="w-5 h-5" />}
+          icon={<Flame className="w-4 h-4 sm:w-5 sm:h-5" />}
           label="Current Streak"
           value={`${streak} days`}
           sub="daily consistency"
           color="warning"
         />
         <StatCard
-          icon={<TrendingUp className="w-5 h-5" />}
+          icon={<TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />}
           label="365-Day Journey"
           value={`Day ${dayInfo.dayNumber}`}
           sub={`${daysRemaining} days remaining`}
@@ -214,35 +215,35 @@ export function DashboardClient({
       </div>
 
       {/* Today Progress + Today Checklist */}
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 w-full min-w-0">
         {/* Today's circular progress */}
-        <Card className="lg:col-span-1">
-          <CardBody className="flex flex-col items-center gap-4 py-6">
+        <Card className="lg:col-span-1 w-full min-w-0">
+          <CardBody className="flex flex-col items-center justify-center gap-3 sm:gap-4 py-5 sm:py-6 text-center w-full">
             <CircularProgress
               value={todayPct}
-              size={130}
-              strokeWidth={9}
+              size={120}
+              strokeWidth={8}
               label={`${todayPct}%`}
               sublabel="completed"
             />
-            <div className="text-center">
-              <p className="font-bold text-base" style={{ color: "var(--text-primary)" }}>
+            <div className="text-center w-full">
+              <p className="font-bold text-sm sm:text-base" style={{ color: "var(--text-primary)" }}>
                 {completed} of {total} tasks done
               </p>
-              <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+              <p className="text-[11px] sm:text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
                 {total - completed} remaining for today&apos;s goal
               </p>
             </div>
             <Link href="/planner" className="w-full">
-              <Button variant="outline" size="sm" className="w-full font-bold">
-                Open Daily Planner <ArrowRight className="w-3.5 h-3.5" />
+              <Button variant="outline" size="sm" className="w-full font-bold justify-center">
+                Open Daily Planner <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </Link>
           </CardBody>
         </Card>
 
         {/* Today's study checklist */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 w-full min-w-0">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -451,21 +452,21 @@ function StatCard({
   const c = colorMap[color];
 
   return (
-    <Card hover>
-      <CardBody className="space-y-2 p-4 sm:p-5">
+    <Card hover className="w-full min-w-0">
+      <CardBody className="space-y-1.5 p-3 sm:p-5">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm"
+          className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-sm"
           style={{ background: `${c}20`, color: c }}
         >
           {icon}
         </div>
-        <p className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
+        <p className="text-[11px] sm:text-xs font-semibold truncate" style={{ color: "var(--text-muted)" }}>
           {label}
         </p>
-        <p className="text-xl sm:text-2xl font-black" style={{ color: "var(--text-primary)" }}>
+        <p className="text-lg sm:text-2xl font-black truncate" style={{ color: "var(--text-primary)" }}>
           {value}
         </p>
-        <p className="text-xs truncate" style={{ color: "var(--text-muted)" }}>
+        <p className="text-[10px] sm:text-xs truncate" style={{ color: "var(--text-muted)" }}>
           {sub}
         </p>
       </CardBody>

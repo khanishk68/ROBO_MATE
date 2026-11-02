@@ -20,35 +20,35 @@ export default function ProfileSelectPage() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center p-6 tech-grid transition-all duration-300"
+      className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 tech-grid transition-all duration-300 w-full max-w-full overflow-x-hidden"
       style={{ background: "var(--bg-primary)" }}
     >
       {/* Brand Header */}
-      <div className="text-center mb-10 max-w-xl animate-in fade-in slide-in-from-top-4 duration-500">
+      <div className="text-center mb-6 sm:mb-10 max-w-xl animate-in fade-in slide-in-from-top-4 duration-500 w-full">
         <div
-          className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl"
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-xl"
           style={{ background: "var(--gradient-accent)" }}
         >
-          <Zap className="w-8 h-8 text-white" />
+          <Zap className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
         </div>
         <h1
-          className="text-3xl md:text-4xl font-black tracking-tight mb-2"
+          className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight mb-1 sm:mb-2"
           style={{ color: "var(--text-primary)" }}
         >
           Who is learning today?
         </h1>
-        <p className="text-sm md:text-base" style={{ color: "var(--text-muted)" }}>
+        <p className="text-xs sm:text-sm md:text-base" style={{ color: "var(--text-muted)" }}>
           ROBO MATES Private Co-Founder Workspace • 8 Nov 2026 – 7 Nov 2027
         </p>
       </div>
 
       {/* Netflix-style 2-Profile Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 w-full max-w-3xl">
         {/* Profile 1: KHANISHK */}
         <button
           type="button"
           onClick={() => handleSelect("khanishk")}
-          className="group relative flex flex-col items-start p-8 rounded-3xl border text-left transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+          className="group relative flex flex-col items-start p-5 sm:p-8 rounded-2xl sm:rounded-3xl border text-left transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/50 w-full"
           style={{
             background: "linear-gradient(145deg, #0D1929 0%, #111E32 100%)",
             borderColor: activeProfile?.slug === "khanishk" ? "#38BDF8" : "#1E3A5F",
@@ -102,7 +102,7 @@ export default function ProfileSelectPage() {
         <button
           type="button"
           onClick={() => handleSelect("akshaya")}
-          className="group relative flex flex-col items-start p-8 rounded-3xl border text-left transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-pink-500/50"
+          className="group relative flex flex-col items-start p-5 sm:p-8 rounded-2xl sm:rounded-3xl border text-left transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-pink-500/50 w-full"
           style={{
             background: "linear-gradient(145deg, #FFF0F3 0%, #FFF8F6 100%)",
             borderColor: activeProfile?.slug === "akshaya" ? "#D96B91" : "#F5B8CC",

@@ -192,42 +192,42 @@ export function ResourcesClient({ userId, initialResources, modules }: Resources
   }
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-6xl mx-auto pb-12">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in max-w-6xl mx-auto pb-16 w-full min-w-0">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 w-full">
         <div>
-          <h1 className="text-2xl font-black" style={{ color: "var(--text-primary)" }}>
-            Study Library & Knowledge Base
+          <h1 className="text-xl sm:text-2xl font-black" style={{ color: "var(--text-primary)" }}>
+            Study Library &amp; Knowledge Base
           </h1>
-          <p className="text-xs sm:text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+          <p className="text-xs sm:text-sm mt-0.5" style={{ color: "var(--text-muted)" }}>
             Curated textbooks, whitepapers, tutorials, and CAD references for our robotics journey.
           </p>
         </div>
 
-        <Button size="sm" onClick={() => setShowAddModal(true)}>
-          <Plus className="w-4 h-4" /> Save Resource
+        <Button size="sm" onClick={() => setShowAddModal(true)} className="self-start sm:self-auto font-bold text-xs">
+          <Plus className="w-4 h-4 mr-1" /> Save Resource
         </Button>
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
+      <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 w-full">
+        <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--text-muted)" }} />
           <input
             type="text"
             placeholder="Search by title, topic, or tag..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field pl-9 text-xs sm:text-sm"
+            className="input-field pl-9 text-xs sm:text-sm w-full"
           />
         </div>
 
-        <div className="flex gap-1 overflow-x-auto pb-1">
+        <div className="flex gap-1 overflow-x-auto pb-1 no-scrollbar w-full sm:w-auto">
           {["all", "book", "pdf", "website", "youtube", "tutorial"].map((type) => (
             <button
               key={type}
               onClick={() => setSelectedType(type)}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all"
+              className="px-2.5 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap flex-shrink-0"
               style={{
                 background: selectedType === type ? "var(--primary)" : "var(--bg-secondary)",
                 color: selectedType === type ? "white" : "var(--text-muted)",

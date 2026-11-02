@@ -178,27 +178,27 @@ export function RoadmapClient({
   }
 
   return (
-    <div className="space-y-8 animate-fade-in pb-16">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in pb-16 w-full min-w-0">
       {/* Top Banner & Overview */}
       <div
-        className="rounded-3xl border p-6 sm:p-8 relative overflow-hidden"
+        className="rounded-2xl sm:rounded-3xl border p-4 sm:p-8 relative overflow-hidden w-full min-w-0"
         style={{
           background: "var(--bg-card)",
           borderColor: "var(--border-color)",
           boxShadow: "var(--shadow-glow)",
         }}
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6 relative z-10">
           <div>
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-2 flex-wrap">
               <Badge variant="primary" size="md">
                 52-WEEK DEDICATED ROBOTICS PROGRAMME
               </Badge>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full" style={{ background: "var(--bg-secondary)", color: "var(--primary)" }}>
+              <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: "var(--bg-secondary)", color: "var(--primary)" }}>
                 {activeSlug === "khanishk" ? "Khanishk • Robotics Systems Engineer" : "Akshaya • Industrial Product Designer"}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black" style={{ color: "var(--text-primary)" }}>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black" style={{ color: "var(--text-primary)" }}>
               {activeSlug === "khanishk" ? "Autonomous Robotics Systems Engineering Roadmap" : "Robotics Product Design & Industrial Styling Roadmap"}
             </h1>
             <p className="text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
@@ -208,51 +208,51 @@ export function RoadmapClient({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <Link href="/planner">
-              <Button size="sm">
-                <Calendar className="w-4 h-4" /> Open Daily Planner
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <Link href="/planner" className="flex-1 sm:flex-initial">
+              <Button size="sm" className="w-full justify-center text-xs">
+                <Calendar className="w-4 h-4 mr-1" /> Daily Planner
               </Button>
             </Link>
-            <Link href="/projects">
-              <Button variant="outline" size="sm">
-                <Award className="w-4 h-4" /> Shared AMR Capstone
+            <Link href="/projects" className="flex-1 sm:flex-initial">
+              <Button variant="outline" size="sm" className="w-full justify-center text-xs">
+                <Award className="w-4 h-4 mr-1" /> AMR Capstone
               </Button>
             </Link>
           </div>
         </div>
 
         {/* 12-Month Progress Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t" style={{ borderColor: "var(--border-color)" }}>
-          <div className="p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
-            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Programme Progress</p>
-            <p className="text-xl font-black mt-1" style={{ color: "var(--primary)" }}>{overallCompletion}%</p>
-            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-muted)" }}>{completedWeeksCount} of 52 weeks</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t" style={{ borderColor: "var(--border-color)" }}>
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate" style={{ color: "var(--text-muted)" }}>Programme Progress</p>
+            <p className="text-lg sm:text-xl font-black mt-1" style={{ color: "var(--primary)" }}>{overallCompletion}%</p>
+            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>{completedWeeksCount} of 52 weeks</p>
           </div>
-          <div className="p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
-            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Current Month</p>
-            <p className="text-xl font-black mt-1" style={{ color: "var(--text-primary)" }}>Month {currentMonthNum}</p>
-            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-muted)" }}>of 12 Months</p>
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate" style={{ color: "var(--text-muted)" }}>Current Month</p>
+            <p className="text-lg sm:text-xl font-black mt-1" style={{ color: "var(--text-primary)" }}>Month {currentMonthNum}</p>
+            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>of 12 Months</p>
           </div>
-          <div className="p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
-            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Current Week</p>
-            <p className="text-xl font-black mt-1" style={{ color: "var(--text-primary)" }}>Week {currentWeekNum}</p>
-            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-muted)" }}>of 52 Weeks</p>
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate" style={{ color: "var(--text-muted)" }}>Current Week</p>
+            <p className="text-lg sm:text-xl font-black mt-1" style={{ color: "var(--text-primary)" }}>Week {currentWeekNum}</p>
+            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>of 52 Weeks</p>
           </div>
-          <div className="p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
-            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Elapsed Days</p>
-            <p className="text-xl font-black mt-1" style={{ color: "var(--text-primary)" }}>{daysCompleted}d</p>
-            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-muted)" }}>Started: 8 Nov 2026</p>
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate" style={{ color: "var(--text-muted)" }}>Elapsed Days</p>
+            <p className="text-lg sm:text-xl font-black mt-1" style={{ color: "var(--text-primary)" }}>{daysCompleted}d</p>
+            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>Started: 8 Nov 2026</p>
           </div>
-          <div className="p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
-            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Days Remaining</p>
-            <p className="text-xl font-black mt-1 text-amber-400">{daysRemaining}d</p>
-            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-muted)" }}>Ends: 7 Nov 2027</p>
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate" style={{ color: "var(--text-muted)" }}>Days Remaining</p>
+            <p className="text-lg sm:text-xl font-black mt-1 text-amber-400">{daysRemaining}d</p>
+            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>Ends: 7 Nov 2027</p>
           </div>
-          <div className="p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
-            <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Study Streak</p>
-            <p className="text-xl font-black mt-1 text-green-400">{streak}d 🔥</p>
-            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-muted)" }}>Consistent Check-ins</p>
+          <div className="p-3 sm:p-3.5 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate" style={{ color: "var(--text-muted)" }}>Study Streak</p>
+            <p className="text-lg sm:text-xl font-black mt-1 text-green-400">{streak}d 🔥</p>
+            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>Check-ins</p>
           </div>
         </div>
       </div>

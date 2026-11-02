@@ -55,17 +55,17 @@ export function AppShell({ children, title, noPadding }: AppShellProps) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "var(--bg-primary)" }}>
+    <div className="flex h-screen w-full max-w-full overflow-hidden" style={{ background: "var(--bg-primary)" }}>
       <Sidebar />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 min-w-0 w-full flex flex-col overflow-hidden">
         <TopBar title={title} />
 
         <main
           className={cn(
-            "flex-1 overflow-y-auto",
-            !noPadding && "p-4 lg:p-6",
-            "pb-20 lg:pb-6" // mobile bottom nav space
+            "flex-1 min-w-0 w-full overflow-y-auto overflow-x-hidden",
+            !noPadding && "p-3 sm:p-4 lg:p-6",
+            "pb-24 lg:pb-8" // generous mobile bottom nav clearance
           )}
         >
           {children}

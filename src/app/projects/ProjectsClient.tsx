@@ -131,27 +131,27 @@ export function ProjectsClient({ userId, project, profiles }: ProjectsClientProp
   }
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-6xl mx-auto pb-12">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-6xl mx-auto pb-16 w-full min-w-0">
       {/* Project Banner */}
       <div
-        className="rounded-3xl border p-6 sm:p-8 relative overflow-hidden"
+        className="rounded-2xl sm:rounded-3xl border p-4 sm:p-8 relative overflow-hidden w-full min-w-0"
         style={{
           background: "var(--gradient-card)",
           borderColor: "var(--border-color)",
           boxShadow: "var(--shadow-glow)",
         }}
       >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <Badge variant="primary" size="md">
                 SHARED ROBOTICS VENTURE
               </Badge>
               <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Co-Engineered by Boy & Girl Founders
+                Co-Engineered by Boy &amp; Girl Founders
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black" style={{ color: "var(--text-primary)" }}>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black" style={{ color: "var(--text-primary)" }}>
               ROBO MATES AUTONOMOUS MOBILE ROBOT (AMR)
             </h1>
             <p className="text-xs sm:text-sm mt-1 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
@@ -159,18 +159,18 @@ export function ProjectsClient({ userId, project, profiles }: ProjectsClientProp
             </p>
           </div>
 
-          <Button size="sm" onClick={() => setShowAddModal(true)}>
-            <Plus className="w-4 h-4" /> Add Project Task
+          <Button size="sm" onClick={() => setShowAddModal(true)} className="self-start sm:self-auto flex-shrink-0 font-bold">
+            <Plus className="w-4 h-4 mr-1" /> Add Project Task
           </Button>
         </div>
 
         {/* Milestone Progress Bar */}
-        <div className="mt-6 pt-6 border-t space-y-2" style={{ borderColor: "var(--border-color)" }}>
+        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t space-y-2" style={{ borderColor: "var(--border-color)" }}>
           <div className="flex items-center justify-between text-xs">
-            <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>
-              AMR Development Progress: {completedCount} / {tasks.length} tasks completed
+            <span className="font-semibold truncate mr-2" style={{ color: "var(--text-secondary)" }}>
+              AMR Development Progress: {completedCount} / {tasks.length} tasks
             </span>
-            <span className="font-bold text-base" style={{ color: "var(--primary)" }}>
+            <span className="font-bold text-base flex-shrink-0" style={{ color: "var(--primary)" }}>
               {projectPct}%
             </span>
           </div>
@@ -178,14 +178,15 @@ export function ProjectsClient({ userId, project, profiles }: ProjectsClientProp
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center justify-between border-b pb-2" style={{ borderColor: "var(--border-color)" }}>
-        <div className="flex gap-2">
+      {/* Tabs & Sub-filters */}
+      <div className="space-y-3 border-b pb-3" style={{ borderColor: "var(--border-color)" }}>
+        {/* Main Section Tabs (Scrollable on mobile) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar w-full">
           <button
             onClick={() => setActiveTab("tasks")}
-            className="px-4 py-2 rounded-xl text-xs font-semibold transition-all"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex-shrink-0"
             style={{
-              background: activeTab === "tasks" ? "var(--primary)" : "transparent",
+              background: activeTab === "tasks" ? "var(--primary)" : "var(--bg-secondary)",
               color: activeTab === "tasks" ? "white" : "var(--text-secondary)",
             }}
           >
@@ -193,61 +194,67 @@ export function ProjectsClient({ userId, project, profiles }: ProjectsClientProp
           </button>
           <button
             onClick={() => setActiveTab("notes")}
-            className="px-4 py-2 rounded-xl text-xs font-semibold transition-all"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex-shrink-0"
             style={{
-              background: activeTab === "notes" ? "var(--primary)" : "transparent",
+              background: activeTab === "notes" ? "var(--primary)" : "var(--bg-secondary)",
               color: activeTab === "notes" ? "white" : "var(--text-secondary)",
             }}
           >
-            Meeting Minutes & Specs
+            Meeting Minutes &amp; Specs
           </button>
           <button
             onClick={() => setActiveTab("attachments")}
-            className="px-4 py-2 rounded-xl text-xs font-semibold transition-all"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex-shrink-0"
             style={{
-              background: activeTab === "attachments" ? "var(--primary)" : "transparent",
+              background: activeTab === "attachments" ? "var(--primary)" : "var(--bg-secondary)",
               color: activeTab === "attachments" ? "white" : "var(--text-secondary)",
             }}
           >
-            CAD & Code Repositories
+            CAD &amp; Code Repositories
           </button>
         </div>
 
+        {/* Sub-Filter: Tasks by Co-founder */}
         {activeTab === "tasks" && (
-          <div className="flex gap-1">
-            <button
-              onClick={() => setFilterOwner("all")}
-              className="px-2.5 py-1 rounded-lg text-xs font-medium border"
-              style={{
-                background: filterOwner === "all" ? "var(--bg-secondary)" : "transparent",
-                borderColor: "var(--border-color)",
-                color: "var(--text-primary)",
-              }}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setFilterOwner("boy")}
-              className="px-2.5 py-1 rounded-lg text-xs font-medium border"
-              style={{
-                background: filterOwner === "boy" ? "var(--bg-secondary)" : "transparent",
-                borderColor: "var(--border-color)",
-                color: "#38BDF8",
-              }}
-            >
-              🤖 Boy Tasks
-            </button>
-            <button
-              onClick={() => setFilterOwner("girl")}
-              className="px-2.5 py-1 rounded-lg text-xs font-medium border"
-              style={{
-                background: filterOwner === "girl" ? "var(--bg-secondary)" : "transparent",
-                borderColor: "var(--border-color)",
-                color: "#F5B8CC",
-              }}
-            >
-              🎨 Girl Tasks
-            </button>
+          <div className="flex items-center justify-between gap-2 flex-wrap pt-1">
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setFilterOwner("all")}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium border"
+                style={{
+                  background: filterOwner === "all" ? "var(--primary)" : "var(--bg-secondary)",
+                  borderColor: "var(--border-color)",
+                  color: filterOwner === "all" ? "white" : "var(--text-primary)",
+                }}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setFilterOwner("boy")}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium border"
+                style={{
+                  background: filterOwner === "boy" ? "rgba(37,99,235,0.2)" : "var(--bg-secondary)",
+                  borderColor: filterOwner === "boy" ? "#2563EB" : "var(--border-color)",
+                  color: "#38BDF8",
+                }}
+              >
+                🤖 Boy Tasks
+              </button>
+              <button
+                onClick={() => setFilterOwner("girl")}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium border"
+                style={{
+                  background: filterOwner === "girl" ? "rgba(217,107,145,0.2)" : "var(--bg-secondary)",
+                  borderColor: filterOwner === "girl" ? "#D96B91" : "var(--border-color)",
+                  color: "#F5B8CC",
+                }}
+              >
+                🎨 Girl Tasks
+              </button>
+            </div>
+            <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+              {filteredTasks.length} {filteredTasks.length === 1 ? "task" : "tasks"}
+            </span>
           </div>
         )}
       </div>

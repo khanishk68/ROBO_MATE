@@ -182,7 +182,7 @@ export function SettingsClient({
   }
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl mx-auto pb-16">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in max-w-4xl mx-auto pb-16 w-full min-w-0">
       <div>
         <h1 className="text-2xl font-black" style={{ color: "var(--text-primary)" }}>
           Settings & Preferences

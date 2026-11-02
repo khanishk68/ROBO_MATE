@@ -87,68 +87,68 @@ export function ProgressClient({
   const textColor = isDark ? "#94A3B8" : "#80576B";
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-6xl mx-auto pb-12">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in max-w-6xl mx-auto pb-16 w-full min-w-0">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black" style={{ color: "var(--text-primary)" }}>
-          Progress & Analytics Centre
+        <h1 className="text-xl sm:text-2xl font-black" style={{ color: "var(--text-primary)" }}>
+          Progress &amp; Analytics Centre
         </h1>
-        <p className="text-xs sm:text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+        <p className="text-xs sm:text-sm mt-0.5" style={{ color: "var(--text-muted)" }}>
           Measurable growth metrics for {profile?.display_name || (isBoyMode ? "Robotics Engineer" : "Product Designer")}.
         </p>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl border" style={{ background: "var(--bg-card)", borderColor: "var(--border-color)" }}>
-          <Clock className="w-5 h-5 text-sky-400 mb-2" />
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Total Study Time</p>
-          <p className="text-2xl font-black mt-1" style={{ color: "var(--text-primary)" }}>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 w-full min-w-0">
+        <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl border min-w-0" style={{ background: "var(--bg-card)", borderColor: "var(--border-color)" }}>
+          <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-sky-400 mb-1.5" />
+          <p className="text-[10px] sm:text-xs truncate" style={{ color: "var(--text-muted)" }}>Total Study Time</p>
+          <p className="text-lg sm:text-2xl font-black mt-0.5 truncate" style={{ color: "var(--text-primary)" }}>
             {totalHours} hrs
           </p>
-          <p className="text-[11px] mt-1" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[10px] sm:text-[11px] mt-0.5 truncate" style={{ color: "var(--text-secondary)" }}>
             ~4.5 hrs/day target
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl border" style={{ background: "var(--bg-card)", borderColor: "var(--border-color)" }}>
-          <Flame className="w-5 h-5 text-amber-400 mb-2" />
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Study Streak</p>
-          <p className="text-2xl font-black mt-1 text-amber-400">
+        <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl border min-w-0" style={{ background: "var(--bg-card)", borderColor: "var(--border-color)" }}>
+          <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mb-1.5" />
+          <p className="text-[10px] sm:text-xs truncate" style={{ color: "var(--text-muted)" }}>Study Streak</p>
+          <p className="text-lg sm:text-2xl font-black mt-0.5 text-amber-400 truncate">
             {streak} Days 🔥
           </p>
-          <p className="text-[11px] mt-1" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[10px] sm:text-[11px] mt-0.5 truncate" style={{ color: "var(--text-secondary)" }}>
             Consistency record
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl border" style={{ background: "var(--bg-card)", borderColor: "var(--border-color)" }}>
-          <Target className="w-5 h-5 text-emerald-400 mb-2" />
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Roadmap Modules</p>
-          <p className="text-2xl font-black mt-1 text-emerald-400">
+        <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl border min-w-0" style={{ background: "var(--bg-card)", borderColor: "var(--border-color)" }}>
+          <Target className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 mb-1.5" />
+          <p className="text-[10px] sm:text-xs truncate" style={{ color: "var(--text-muted)" }}>Roadmap Modules</p>
+          <p className="text-lg sm:text-2xl font-black mt-0.5 text-emerald-400 truncate">
             {completedModules}/{totalModules}
           </p>
-          <p className="text-[11px] mt-1" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[10px] sm:text-[11px] mt-0.5 truncate" style={{ color: "var(--text-secondary)" }}>
             {modulePct}% completed
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl border" style={{ background: "var(--bg-card)", borderColor: "var(--border-color)" }}>
-          <Award className="w-5 h-5 text-purple-400 mb-2" />
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Assessment Average</p>
-          <p className="text-2xl font-black mt-1" style={{ color: "var(--primary)" }}>
+        <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl border min-w-0" style={{ background: "var(--bg-card)", borderColor: "var(--border-color)" }}>
+          <Award className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 mb-1.5" />
+          <p className="text-[10px] sm:text-xs truncate" style={{ color: "var(--text-muted)" }}>Assessment Average</p>
+          <p className="text-lg sm:text-2xl font-black mt-0.5 truncate" style={{ color: "var(--primary)" }}>
             {avgScore}%
           </p>
-          <p className="text-[11px] mt-1" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[10px] sm:text-[11px] mt-0.5 truncate" style={{ color: "var(--text-secondary)" }}>
             Across all tests
           </p>
         </div>
       </div>
 
       {/* Visual Charts */}
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 w-full min-w-0">
         {/* 14-day study hours bar chart */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 w-full min-w-0 overflow-hidden">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
