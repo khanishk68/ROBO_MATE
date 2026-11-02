@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toaster";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -63,7 +64,15 @@ const QUICK_ACTIONS = [
   { icon: <ClipboardList className="w-3.5 h-3.5" />, label: "Quiz me",    prompt: "Generate a 5-question quiz on what I've been studying" },
 ];
 
-export function AITutorClient({ userId, persona, displayName, initialConversations }: AITutorClientProps) {
+export function AITutorClient({ userId, persona: initialPersona, displayName: initialName, initialConversations }: AITutorClientProps) {
+  const { activeProfile } = useAuth();
+  const { isDark, isBoyMode } = useTheme();
+  const { success, error: showError } = useToast();
+
+  const effectiveProfileId = activeProfile?.id || userId;
+  const currentPersona = isBoyMode ? "boy" : "girl";
+  const studentName = activeProfile?.display_name || initialName;
+
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
   const [activeConvId, setActiveConvId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -73,10 +82,26 @@ export function AITutorClient({ userId, persona, displayName, initialConversatio
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { success, error: showError } = useToast();
-  const { isDark, isBoyMode } = useTheme();
 
   const suggestions = isBoyMode ? BOY_SUGGESTIONS : GIRL_SUGGESTIONS;
+
+  // Reload conversations when switching profiles
+  useEffect(() => {
+    async function fetchProfileConvs() {
+      try {
+        const res = await fetch(`/api/ai/conversations?profileId=${effectiveProfileId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setConversations(data);
+          setActiveConvId(null);
+          setMessages([]);
+        }
+      } catch {
+        // preserve existing
+      }
+    }
+    fetchProfileConvs();
+  }, [effectiveProfileId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -127,6 +152,8 @@ export function AITutorClient({ userId, persona, displayName, initialConversatio
         body: JSON.stringify({
           conversationId: activeConvId,
           message: messageText,
+          profileId: effectiveProfileId,
+          persona: currentPersona,
         }),
       });
 
@@ -139,7 +166,7 @@ export function AITutorClient({ userId, persona, displayName, initialConversatio
         // If new conversation was created, update the list
         if (!activeConvId && data.conversationId) {
           setActiveConvId(data.conversationId);
-          const convRes = await fetch("/api/ai/conversations");
+          const convRes = await fetch(`/api/ai/conversations?profileId=${effectiveProfileId}`);
           if (convRes.ok) setConversations(await convRes.json());
         }
 

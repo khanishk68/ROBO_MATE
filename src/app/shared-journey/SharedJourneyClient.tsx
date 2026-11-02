@@ -32,34 +32,38 @@ export function SharedJourneyClient({
   const { success } = useToast();
   const [cheered, setCheered] = useState(false);
 
-  // Find boy profile and girl profile
-  const boyProfile = profiles.find((p) => p.persona === "boy") || {
-    id: "boy-demo",
-    display_name: "Boy Partner",
+  // Find boy profile (Khanishk) and girl profile (Akshaya)
+  const boyProfile = profiles.find((p) => p.persona === "boy" || p.slug === "khanishk") || {
+    id: "khanishk-founder",
+    display_name: "Khanishk",
     persona: "boy" as const,
+    slug: "khanishk" as const,
+    specialization: "Robotics Systems Engineer",
     timezone: "Asia/Kolkata",
     theme_mode: "dark" as const,
     daily_study_hours: 4.5,
     study_start_time: "09:00",
     study_days: [1, 2, 3, 4, 5, 6],
-    journey_start_date: "2026-11-01",
-    journey_target_date: "2027-11-01",
+    journey_start_date: "2026-11-08",
+    journey_target_date: "2027-11-07",
     avatar_url: null,
     created_at: "",
     updated_at: "",
   };
 
-  const girlProfile = profiles.find((p) => p.persona === "girl") || {
-    id: "girl-demo",
-    display_name: "Girl Partner",
+  const girlProfile = profiles.find((p) => p.persona === "girl" || p.slug === "akshaya") || {
+    id: "akshaya-founder",
+    display_name: "Akshaya",
     persona: "girl" as const,
+    slug: "akshaya" as const,
+    specialization: "Industrial & Robotics Product Designer",
     timezone: "Asia/Kolkata",
     theme_mode: "light" as const,
-    daily_study_hours: 4.5,
-    study_start_time: "09:00",
+    daily_study_hours: 2.75,
+    study_start_time: "10:00",
     study_days: [1, 2, 3, 4, 5, 6],
-    journey_start_date: "2026-11-01",
-    journey_target_date: "2027-11-01",
+    journey_start_date: "2026-11-08",
+    journey_target_date: "2027-11-07",
     avatar_url: null,
     created_at: "",
     updated_at: "",
@@ -239,45 +243,45 @@ export function SharedJourneyClient({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-lg text-slate-900">
+                  <h3 className="font-bold text-lg text-[#67485A]">
                     {girlProfile.display_name}
                   </h3>
                   {girlProfile.id === currentUserId && (
-                    <span className="text-[10px] bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full font-semibold">
+                    <span className="text-[10px] bg-pink-100 text-[#D96B91] px-2 py-0.5 rounded-full font-semibold">
                       You
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-pink-600 font-medium">
+                <p className="text-xs text-[#D96B91] font-medium">
                   Industrial Product Designer
                 </p>
               </div>
             </div>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-pink-50 text-pink-700 border border-pink-200">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-pink-50 text-[#67485A] border border-pink-200">
               Girl Mode
             </span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-white border border-pink-100 text-xs space-y-1.5 text-slate-700">
+          <div className="p-3.5 rounded-xl bg-white border border-pink-100 text-xs space-y-1.5 text-[#67485A]">
             <p><strong>Core Focus:</strong> Sketching, Fusion 360 CAD, Blender rendering, DFM, Human-Robot UX.</p>
             <p><strong>Deliverable:</strong> Ergonomic ABS Robot Enclosure & Production CAD Assembly.</p>
           </div>
 
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="p-3 rounded-xl bg-white border border-pink-100">
-              <Clock className="w-4 h-4 mx-auto mb-1 text-pink-500" />
-              <p className="text-base font-bold text-slate-900">{formatDuration(girlMinutes || 4800)}</p>
-              <p className="text-[10px] text-slate-500">Total Studied</p>
+              <Clock className="w-4 h-4 mx-auto mb-1 text-[#D96B91]" />
+              <p className="text-base font-bold text-[#67485A]">{formatDuration(girlMinutes || 4800)}</p>
+              <p className="text-[10px] text-[#A07080]">Total Studied</p>
             </div>
             <div className="p-3 rounded-xl bg-white border border-pink-100">
-              <Target className="w-4 h-4 mx-auto mb-1 text-rose-500" />
-              <p className="text-base font-bold text-slate-900">{girlCompletedModules || 4} mods</p>
-              <p className="text-[10px] text-slate-500">Completed</p>
+              <Target className="w-4 h-4 mx-auto mb-1 text-[#D96B91]" />
+              <p className="text-base font-bold text-[#67485A]">{girlCompletedModules || 4} mods</p>
+              <p className="text-[10px] text-[#A07080]">Completed</p>
             </div>
             <div className="p-3 rounded-xl bg-white border border-pink-100">
               <Flame className="w-4 h-4 mx-auto mb-1 text-amber-500" />
-              <p className="text-base font-bold text-slate-900">{girlStreak || 8}d</p>
-              <p className="text-[10px] text-slate-500">Active Streak</p>
+              <p className="text-base font-bold text-[#67485A]">{girlStreak || 8}d</p>
+              <p className="text-[10px] text-[#A07080]">Active Streak</p>
             </div>
           </div>
         </div>

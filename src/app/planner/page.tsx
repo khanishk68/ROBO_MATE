@@ -15,29 +15,28 @@ export default async function PlannerPage() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  // Get profile
-  const { data: profile } = await supabase
+  // Fetch profiles belonging to this account
+  const { data: profiles } = await supabase
     .from("profiles")
     .select("*")
-    .eq("id", user.id)
-    .single();
+    .or(`account_id.eq.${user.id},id.eq.${user.id}`);
 
-  // Get roadmap modules for task creation
+  const activeProfile = profiles?.[0] || null;
+
+  // Get roadmap modules
   const { data: modules } = await supabase
     .from("roadmap_modules")
     .select("id, title, week_number, roadmap_months(month_number, title)")
-    .eq("owner_id", user.id)
     .order("sequence");
 
   return (
     <AppShell title="Daily Planner">
       <PlannerClient
         userId={user.id}
-        profile={profile}
+        profile={activeProfile}
         modules={modules || []}
         today={today}
       />
     </AppShell>
   );
 }
-

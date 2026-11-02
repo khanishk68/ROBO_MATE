@@ -3,22 +3,20 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Mail, Lock, Zap, Eye, EyeOff, User, Cpu, Heart, CheckCircle2 } from "lucide-react";
+import { Mail, Lock, Zap, Eye, EyeOff, Shield, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Input, Select } from "@/components/ui/Input";
+import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toaster";
-import type { Persona } from "@/types/database";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { error: showError, success, info } = useToast();
+  const { error: showError, success } = useToast();
   const [mode, setMode] = useState<"signin" | "signup" | "reset">("signin");
 
   // Form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [persona, setPersona] = useState<Persona>("boy");
+  const [workspaceName, setWorkspaceName] = useState("ROBO MATES Private Workspace");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -32,18 +30,18 @@ export default function LoginPage() {
 
     if (error) {
       showError("Sign in failed", error.message);
+      setLoading(false);
     } else {
-      success("Welcome back to ROBO MATES!");
-      router.push("/dashboard");
+      success("Authenticated!", "Loading your co-founder profiles...");
+      router.push("/profile-select");
       router.refresh();
     }
-    setLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!displayName.trim()) {
-      showError("Please enter your name");
+    if (!email.trim() || !password.trim()) {
+      showError("Email and password are required");
       return;
     }
     if (password.length < 6) {
@@ -54,42 +52,37 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // 1. Register and auto-confirm via Server Admin API (bypasses Supabase SMTP email rate limits completely)
+      // 1. Register & auto-confirm via Server Admin API (provisions Khanishk & Akshaya profiles)
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, displayName, persona }),
+        body: JSON.stringify({ email, password, workspaceName }),
       });
 
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result.error || "Registration failed. Please check credentials.");
+        throw new Error(result.error || "Setup failed. Please check credentials.");
       }
 
-      // 2. Automatically log the user in immediately (no email confirmation link required!)
+      // 2. Automatically log the user in immediately
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (signInError) {
-        showError("Setup succeeded, but sign-in failed", signInError.message);
+        showError("Account initialized, please sign in", signInError.message);
         setMode("signin");
         setLoading(false);
         return;
       }
 
-      // Save persona & theme preference locally
-      const defaultTheme = persona === "boy" ? "dark" : "light";
-      localStorage.setItem("rm-persona", persona);
-      localStorage.setItem("rm-theme", defaultTheme);
-
-      success("Co-Founder Account Activated!", "Welcome to ROBO MATES! Redirecting to dashboard...");
-      router.push("/dashboard");
+      success("Workspace Activated!", "Select your profile to begin learning...");
+      router.push("/profile-select");
       router.refresh();
     } catch (err: any) {
-      showError("Setup failed", err.message || "An unexpected error occurred.");
+      showError("Activation failed", err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -100,7 +93,7 @@ export default function LoginPage() {
     setLoading(true);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
+      redirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback?next=/auth/reset-password`,
     });
 
     if (error) {
@@ -118,10 +111,7 @@ export default function LoginPage() {
       style={{ background: "var(--bg-primary)" }}
     >
       {/* Background decoration */}
-      <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-        aria-hidden="true"
-      >
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <div
           className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-10"
           style={{ background: "var(--primary)" }}
@@ -143,13 +133,13 @@ export default function LoginPage() {
           </div>
           <h1 className="text-3xl font-black gradient-text tracking-tight">ROBO MATES</h1>
           <p className="mt-1 text-xs sm:text-sm" style={{ color: "var(--text-muted)" }}>
-            Two Learners. Two Specializations. One Robotics Journey.
+            Khanishk &amp; Akshaya • Two Specializations • One Robotics Journey
           </p>
         </div>
 
         {/* Card */}
         <div
-          className="rounded-2xl border p-6 sm:p-8 shadow-2xl"
+          className="rounded-2xl border p-6 sm:p-8 shadow-2xl backdrop-blur-md"
           style={{
             background: "var(--bg-card)",
             borderColor: "var(--border-color)",
@@ -182,16 +172,16 @@ export default function LoginPage() {
                   color: mode === "signup" ? "white" : "var(--text-muted)",
                 }}
               >
-                Register New User
+                Activate Account
               </button>
             </div>
           )}
 
-          {/* Form */}
+          {/* Sign In Form */}
           {mode === "signin" && (
             <form onSubmit={handleLogin} className="space-y-4">
               <Input
-                label="Email address"
+                label="Co-Founder Account Email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -221,8 +211,8 @@ export default function LoginPage() {
                 autoComplete="current-password"
               />
 
-              <Button type="submit" loading={loading} className="w-full mt-2">
-                Sign In
+              <Button type="submit" loading={loading} className="w-full mt-2 font-bold">
+                Sign In to Workspace
               </Button>
 
               <div className="flex justify-between items-center text-xs pt-1">
@@ -240,82 +230,46 @@ export default function LoginPage() {
                   className="font-semibold transition-opacity hover:opacity-70"
                   style={{ color: "var(--primary)" }}
                 >
-                  Need to register? Create account →
+                  First-time setup? Activate →
                 </button>
               </div>
             </form>
           )}
 
+          {/* Activate Workspace / Initial Setup Form */}
           {mode === "signup" && (
             <form onSubmit={handleSignUp} className="space-y-4">
-              <Input
-                label="Your Name"
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="e.g. Alex or Maya"
-                required
-                leftIcon={<User className="w-4 h-4" />}
-              />
-
-              <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--text-secondary)" }}>
-                  Select Your Co-Founder Role *
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPersona("boy")}
-                    className="p-3 rounded-xl border text-left transition-all"
-                    style={{
-                      background: persona === "boy" ? "rgba(37,99,235,0.15)" : "var(--bg-secondary)",
-                      borderColor: persona === "boy" ? "#2563EB" : "var(--border-color)",
-                    }}
-                  >
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-sky-400 mb-1">
-                      <Cpu className="w-3.5 h-3.5" /> Boy Mode
-                    </div>
-                    <p className="text-[11px] leading-tight" style={{ color: "var(--text-secondary)" }}>
-                      Robotics Systems Engineer
-                    </p>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setPersona("girl")}
-                    className="p-3 rounded-xl border text-left transition-all"
-                    style={{
-                      background: persona === "girl" ? "rgba(217,107,145,0.15)" : "var(--bg-secondary)",
-                      borderColor: persona === "girl" ? "#D96B91" : "var(--border-color)",
-                    }}
-                  >
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-pink-400 mb-1">
-                      <Heart className="w-3.5 h-3.5" /> Girl Mode
-                    </div>
-                    <p className="text-[11px] leading-tight" style={{ color: "var(--text-secondary)" }}>
-                      Industrial Product Designer
-                    </p>
-                  </button>
+              <div
+                className="p-3.5 rounded-xl border mb-2 text-xs leading-relaxed"
+                style={{
+                  background: "var(--bg-secondary)",
+                  borderColor: "var(--border-color)",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                <div className="flex items-center gap-1.5 font-bold mb-1" style={{ color: "var(--primary)" }}>
+                  <Shield className="w-4 h-4" /> Single Authenticated Co-Founder Account
                 </div>
+                Activating this account creates access for both <strong>Khanishk</strong> (Robotics Systems Engineer) and <strong>Akshaya</strong> (Product Designer). You will choose your profile on the next screen.
               </div>
 
               <Input
-                label="Email address"
+                label="Account Email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="founder@robomates.app"
+                placeholder="tkhanishk0@gmail.com"
                 required
                 leftIcon={<Mail className="w-4 h-4" />}
                 autoComplete="email"
               />
 
               <Input
-                label="Create Password"
+                label="Create Password (min. 6 characters)"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
+                placeholder="••••••••"
                 required
                 leftIcon={<Lock className="w-4 h-4" />}
                 rightIcon={
@@ -330,32 +284,29 @@ export default function LoginPage() {
                 autoComplete="new-password"
               />
 
-              <Button type="submit" loading={loading} className="w-full mt-2">
-                Register Co-Founder Account
+              <Button type="submit" loading={loading} className="w-full mt-2 font-bold">
+                Activate Co-Founder Workspace
               </Button>
 
-              <div className="text-center text-xs pt-1">
+              <div className="text-center pt-2">
                 <button
                   type="button"
                   onClick={() => setMode("signin")}
-                  className="font-semibold transition-opacity hover:opacity-70"
+                  className="text-xs transition-opacity hover:opacity-70"
                   style={{ color: "var(--primary)" }}
                 >
-                  Already registered? Sign in instead →
+                  Already have an account? Sign in instead →
                 </button>
               </div>
             </form>
           )}
 
+          {/* Reset Password Form */}
           {mode === "reset" && (
             <form onSubmit={handleReset} className="space-y-4">
-              <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
-                Reset Your Password
-              </h2>
               <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Enter your email address and we&apos;ll send you a password reset link.
+                Enter your account email to receive a password reset link.
               </p>
-
               <Input
                 label="Email address"
                 type="email"
@@ -365,39 +316,27 @@ export default function LoginPage() {
                 required
                 leftIcon={<Mail className="w-4 h-4" />}
               />
-
               <Button type="submit" loading={loading} className="w-full">
                 Send Reset Link
               </Button>
-
-              <div className="text-center text-xs pt-1">
+              <div className="text-center pt-2">
                 <button
                   type="button"
                   onClick={() => setMode("signin")}
-                  className="transition-opacity hover:opacity-70"
+                  className="text-xs font-semibold hover:opacity-70"
                   style={{ color: "var(--primary)" }}
                 >
-                  ← Back to sign in
+                  Back to Sign In
                 </button>
               </div>
             </form>
           )}
-
-          {/* Private workspace notice */}
-          <div
-            className="mt-6 p-3 rounded-xl border text-center"
-            style={{
-              background: "var(--bg-secondary)",
-              borderColor: "var(--border-color)",
-            }}
-          >
-            <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              🔒 <strong>Private 2-Person Workspace:</strong>
-              <br />
-              Authorized exclusively for the Robotics Engineer & Industrial Designer co-founders.
-            </p>
-          </div>
         </div>
+
+        {/* Footer info */}
+        <p className="text-center text-xs mt-6" style={{ color: "var(--text-muted)" }}>
+          ROBO MATES AMR • 8 November 2026 – 7 November 2027
+        </p>
       </div>
     </div>
   );

@@ -31,12 +31,19 @@ export function ThemeProvider({
     setPersonaState(p);
     document.documentElement.dataset.persona = p;
     localStorage.setItem("rm-persona", p);
+
+    // Restore saved theme for this persona if present
+    const savedPersonaTheme = localStorage.getItem(`rm-theme-${p}`) as ThemeMode | null;
+    const targetTheme = savedPersonaTheme || (p === "boy" ? "dark" : "light");
+    setThemeModeState(targetTheme);
+    document.documentElement.dataset.theme = targetTheme;
   };
 
   const setThemeMode = (m: ThemeMode) => {
     setThemeModeState(m);
     document.documentElement.dataset.theme = m;
     localStorage.setItem("rm-theme", m);
+    localStorage.setItem(`rm-theme-${persona}`, m);
   };
 
   const toggleThemeMode = () => {

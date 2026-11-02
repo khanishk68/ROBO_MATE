@@ -32,6 +32,7 @@ export function TaskStatusBadge({ status }: { status: TaskStatus }) {
     completed:   { label: "Completed",   variant: "success" },
     missed:      { label: "Missed",      variant: "error" },
     skipped:     { label: "Skipped",     variant: "warning" },
+    postponed:   { label: "Postponed",   variant: "warning" },
   };
   const { label, variant } = map[status] || map.pending;
   return <Badge variant={variant}>{label}</Badge>;

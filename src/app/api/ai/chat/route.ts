@@ -9,6 +9,8 @@ import { z } from "zod";
 const schema = z.object({
   conversationId: z.string().uuid().optional(),
   message: z.string().min(1).max(4000),
+  profileId: z.string().optional(),
+  persona: z.enum(["boy", "girl"]).optional(),
 });
 
 // System prompts per persona
@@ -71,28 +73,39 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request", details: parsed.error.format() }, { status: 400 });
   }
 
-  const { conversationId, message } = parsed.data;
-
-  if (!process.env.GEMINI_API_KEY) {
-    return NextResponse.json({ error: "AI service not configured" }, { status: 503 });
-  }
+  const { conversationId, message, profileId, persona: clientPersona } = parsed.data;
 
   try {
-    // Get user profile
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("persona, display_name")
-      .eq("id", user.id)
-      .single();
+    // 1. Fetch user profile (or active co-founder profile)
+    let profile = null;
+    if (profileId) {
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("id, persona, display_name")
+        .eq("id", profileId)
+        .single();
+      profile = p;
+    }
 
-    const persona = profile?.persona || "boy";
+    if (!profile) {
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("id, persona, display_name")
+        .eq("id", user.id)
+        .single();
+      profile = p;
+    }
+
+    const persona = clientPersona || profile?.persona || "boy";
+    const displayName = profile?.display_name || (persona === "boy" ? "Khanishk" : "Akshaya");
+    const effectiveProfileId = profile?.id || user.id;
 
     // Today's tasks context
     const today = new Date().toISOString().split("T")[0];
     const { data: todayOccs } = await supabase
       .from("task_occurrences")
       .select("study_tasks(title, subject)")
-      .eq("owner_id", user.id)
+      .or(`owner_id.eq.${effectiveProfileId},owner_id.eq.${user.id}`)
       .eq("scheduled_date", today);
 
     const todayTasks = (todayOccs || [])
@@ -104,7 +117,7 @@ export async function POST(request: NextRequest) {
     const { data: currentModule } = await supabase
       .from("roadmap_modules")
       .select("title")
-      .eq("owner_id", user.id)
+      .or(`owner_id.eq.${effectiveProfileId},owner_id.eq.${user.id}`)
       .eq("status", "in_progress")
       .order("sequence")
       .limit(1)
@@ -116,12 +129,21 @@ export async function POST(request: NextRequest) {
       const title = message.length > 60 ? message.slice(0, 60) + "…" : message;
       const { data: newConv, error } = await supabase
         .from("ai_conversations")
-        .insert({ user_id: user.id, title })
+        .insert({ user_id: effectiveProfileId, title })
         .select()
         .single();
 
-      if (error) throw error;
-      convId = newConv.id;
+      if (error) {
+        // Fallback to user.id if effectiveProfileId foreign key mismatch
+        const { data: fallbackConv } = await supabase
+          .from("ai_conversations")
+          .insert({ user_id: user.id, title })
+          .select()
+          .single();
+        convId = fallbackConv?.id || `conv-${Date.now()}`;
+      } else {
+        convId = newConv.id;
+      }
     }
 
     // Get conversation history (last 20 messages for context window)

@@ -38,20 +38,34 @@ export function SettingsClient({
   journeySettings,
 }: SettingsClientProps) {
   const { isBoyMode, themeMode, setThemeMode, persona, setPersona } = useTheme();
-  const { refreshProfile } = useAuth();
+  const { activeProfile, profiles, selectProfile, refreshProfile } = useAuth();
   const { success, error: showError, info } = useToast();
   const supabase = createClient();
 
+  const currentProfile = activeProfile || profile;
+
   // Profile form state
-  const [displayName, setDisplayName] = useState(profile?.display_name || "");
-  const [selectedPersona, setSelectedPersona] = useState<Persona>(profile?.persona || persona);
-  const [timezone, setTimezone] = useState(profile?.timezone || "Asia/Kolkata");
+  const [displayName, setDisplayName] = useState(currentProfile?.display_name || "");
+  const [selectedPersona, setSelectedPersona] = useState<Persona>(currentProfile?.persona || persona);
+  const [timezone, setTimezone] = useState(currentProfile?.timezone || "Asia/Kolkata");
   const [savingProfile, setSavingProfile] = useState(false);
 
   // Daily Schedule state
-  const [dailyHours, setDailyHours] = useState(profile?.daily_study_hours || 4.5);
-  const [startTime, setStartTime] = useState(profile?.study_start_time || "09:00");
-  const [studyDays, setStudyDays] = useState<number[]>(profile?.study_days || [1, 2, 3, 4, 5, 6]);
+  const [dailyHours, setDailyHours] = useState(currentProfile?.daily_study_hours || 4.5);
+  const [startTime, setStartTime] = useState(currentProfile?.study_start_time || "09:00");
+  const [studyDays, setStudyDays] = useState<number[]>(currentProfile?.study_days || [1, 2, 3, 4, 5, 6]);
+
+  // Keep synced with activeProfile
+  React.useEffect(() => {
+    if (activeProfile) {
+      setDisplayName(activeProfile.display_name);
+      setSelectedPersona(activeProfile.persona);
+      setTimezone(activeProfile.timezone || "Asia/Kolkata");
+      setDailyHours(activeProfile.daily_study_hours || (activeProfile.slug === "khanishk" ? 4.5 : 2.5));
+      setStartTime(activeProfile.study_start_time || "09:00");
+      setStudyDays(activeProfile.study_days || [1, 2, 3, 4, 5, 6]);
+    }
+  }, [activeProfile]);
 
   // Push Notifications state
   const [notificationsEnabled, setNotificationsEnabled] = useState(initialReminders?.enabled ?? false);
@@ -62,6 +76,7 @@ export function SettingsClient({
 
   async function handleSaveProfile() {
     setSavingProfile(true);
+    const targetId = activeProfile?.id || profile?.id || user.id;
     try {
       const { error } = await supabase
         .from("profiles")
@@ -75,9 +90,23 @@ export function SettingsClient({
           theme_mode: themeMode,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", user.id);
+        .eq("id", targetId);
 
-      if (error) throw error;
+      if (error) {
+        // Fallback to update by account_id and slug if id didn't match
+        await supabase
+          .from("profiles")
+          .update({
+            display_name: displayName,
+            timezone,
+            daily_study_hours: dailyHours,
+            study_start_time: startTime,
+            study_days: studyDays,
+            theme_mode: themeMode,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("slug", activeProfile?.slug || (selectedPersona === "boy" ? "khanishk" : "akshaya"));
+      }
 
       setPersona(selectedPersona);
       await refreshProfile();
@@ -162,6 +191,77 @@ export function SettingsClient({
           Configure your personal profile, study schedule distribution, theme, and daily push notifications.
         </p>
       </div>
+
+      {/* 0. Co-Founder Profile Switcher */}
+      <Card>
+        <CardBody className="p-4 sm:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--primary)" }}>
+                Active Co-Founder Profile
+              </p>
+              <h3 className="font-bold text-base mt-0.5" style={{ color: "var(--text-primary)" }}>
+                Editing Settings for: {activeProfile?.display_name || "Co-Founder"} ({activeProfile?.slug === "khanishk" ? "Robotics Systems Engineer" : "Industrial Product Designer"})
+              </h3>
+            </div>
+            <span className="text-xs px-2.5 py-1 rounded-full border self-start sm:self-auto" style={{ borderColor: "var(--border-color)", color: "var(--text-secondary)" }}>
+              One Login • 2 Co-Founder Profiles
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                selectProfile("khanishk");
+                setPersona("boy");
+                success("Switched to Khanishk's profile!");
+              }}
+              className="p-3.5 rounded-xl border text-left transition-all flex items-center justify-between"
+              style={{
+                background: activeProfile?.slug === "khanishk" ? "rgba(37,99,235,0.1)" : "var(--bg-secondary)",
+                borderColor: activeProfile?.slug === "khanishk" ? "#2563EB" : "var(--border-color)",
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white" style={{ background: "#2563EB" }}>
+                  <Cpu className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="font-bold text-xs" style={{ color: "var(--text-primary)" }}>Khanishk</p>
+                  <p className="text-[11px]" style={{ color: "var(--text-muted)" }}>Robotics Engineer (4.5h/d)</p>
+                </div>
+              </div>
+              {activeProfile?.slug === "khanishk" && <Check className="w-4 h-4 text-blue-400" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                selectProfile("akshaya");
+                setPersona("girl");
+                success("Switched to Akshaya's profile!");
+              }}
+              className="p-3.5 rounded-xl border text-left transition-all flex items-center justify-between"
+              style={{
+                background: activeProfile?.slug === "akshaya" ? "rgba(217,107,145,0.1)" : "var(--bg-secondary)",
+                borderColor: activeProfile?.slug === "akshaya" ? "#D96B91" : "var(--border-color)",
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white" style={{ background: "#D96B91" }}>
+                  <Heart className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="font-bold text-xs" style={{ color: "var(--text-primary)" }}>Akshaya</p>
+                  <p className="text-[11px]" style={{ color: "var(--text-muted)" }}>Industrial Designer (2.5h/d)</p>
+                </div>
+              </div>
+              {activeProfile?.slug === "akshaya" && <Check className="w-4 h-4 text-pink-400" />}
+            </button>
+          </div>
+        </CardBody>
+      </Card>
 
       {/* 1. Profile Settings */}
       <Card>

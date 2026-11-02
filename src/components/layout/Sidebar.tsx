@@ -107,22 +107,31 @@ export function Sidebar() {
         style={{ borderColor: "var(--border-color)" }}
       >
         {!collapsed && (
-          <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg">
+          <Link
+            href="/profile-select"
+            className="flex items-center gap-2 px-2.5 py-2 rounded-xl border transition-all hover:scale-[1.01] mb-2"
+            style={{
+              background: "var(--bg-primary)",
+              borderColor: "var(--border-color)",
+            }}
+            title="Switch Co-Founder Profile"
+          >
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
               style={{ background: "var(--gradient-accent)" }}
             >
-              {profile?.display_name?.[0]?.toUpperCase() || "?"}
+              {profile?.display_name?.[0]?.toUpperCase() || (isBoyMode ? "K" : "A")}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>
-                {profile?.display_name || "User"}
+              <p className="text-xs font-bold truncate" style={{ color: "var(--text-primary)" }}>
+                {profile?.display_name || (isBoyMode ? "Khanishk" : "Akshaya")}
               </p>
-              <p className="text-xs truncate" style={{ color: "var(--text-muted)" }}>
-                {isBoyMode ? "Robotics Engineer" : "Product Designer"}
+              <p className="text-[10px] truncate" style={{ color: "var(--text-muted)" }}>
+                {isBoyMode ? "Robotics Systems" : "Product Designer"}
               </p>
             </div>
-          </div>
+            <Users className="w-4 h-4 text-sky-400" />
+          </Link>
         )}
 
         <div className="flex items-center gap-1">

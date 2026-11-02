@@ -8,11 +8,21 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data, error } = await supabase
+  const { searchParams } = new URL(request.url);
+  const profileId = searchParams.get("profileId");
+
+  let query = supabase
     .from("ai_conversations")
     .select("id, title, created_at, updated_at")
-    .eq("user_id", user.id)
     .order("updated_at", { ascending: false });
+
+  if (profileId) {
+    query = query.or(`user_id.eq.${profileId},user_id.eq.${user.id}`);
+  } else {
+    query = query.eq("user_id", user.id);
+  }
+
+  const { data, error } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data);

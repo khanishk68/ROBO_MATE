@@ -2,8 +2,9 @@
 // Supabase database type definitions
 
 export type Persona = "boy" | "girl";
+export type ProfileSlug = "khanishk" | "akshaya";
 export type ThemeMode = "light" | "dark";
-export type TaskStatus = "pending" | "in_progress" | "completed" | "missed" | "skipped";
+export type TaskStatus = "pending" | "in_progress" | "completed" | "missed" | "skipped" | "postponed";
 export type Priority = "low" | "medium" | "high" | "critical";
 export type ResourceType = "book" | "pdf" | "website" | "tutorial" | "youtube" | "note" | "image" | "other";
 export type ProjectStatus = "planning" | "in_progress" | "on_hold" | "completed";
@@ -17,16 +18,19 @@ export interface Database {
       profiles: {
         Row: {
           id: string;
+          account_id: string;
+          slug: ProfileSlug;
           display_name: string;
           persona: Persona;
+          specialization: string;
           avatar_url: string | null;
           timezone: string;
           theme_mode: ThemeMode;
           daily_study_hours: number;
           study_start_time: string;
           study_days: number[];
-          journey_start_date: string | null;
-          journey_target_date: string | null;
+          journey_start_date: string;
+          journey_target_date: string;
           created_at: string;
           updated_at: string;
         };
@@ -266,6 +270,23 @@ export interface Database {
         Insert: Omit<Database["public"]["Tables"]["projects"]["Row"], "id" | "created_at" | "updated_at">;
         Update: Partial<Database["public"]["Tables"]["projects"]["Insert"]>;
       };
+      project_milestones: {
+        Row: {
+          id: string;
+          project_id: string;
+          stage_number: number;
+          title: string;
+          description: string;
+          target_date: string | null;
+          status: "pending" | "in_progress" | "completed";
+          khanishk_deliverable: string;
+          akshaya_deliverable: string;
+          shared_deliverable: string;
+          created_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["project_milestones"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["project_milestones"]["Insert"]>;
+      };
       project_tasks: {
         Row: {
           id: string;
@@ -375,6 +396,7 @@ export type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 export type AIConversation = Database["public"]["Tables"]["ai_conversations"]["Row"];
 export type AIMessage = Database["public"]["Tables"]["ai_messages"]["Row"];
 export type Project = Database["public"]["Tables"]["projects"]["Row"];
+export type ProjectMilestone = Database["public"]["Tables"]["project_milestones"]["Row"];
 export type ProjectTask = Database["public"]["Tables"]["project_tasks"]["Row"];
 export type ProjectAttachment = Database["public"]["Tables"]["project_attachments"]["Row"];
 export type ProjectNote = Database["public"]["Tables"]["project_notes"]["Row"];
