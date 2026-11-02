@@ -230,3 +230,4 @@ export function getDailyTasksForDate(slug: ProfileSlug | string, dateString: str
     subject: month.mainSubjects[0] || (isKhanishk ? "Robotics" : "Design"),
   }));
 }
+

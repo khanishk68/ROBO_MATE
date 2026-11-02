@@ -668,3 +668,4 @@ export const AKSHAYA_CURRICULUM: CurriculumMonth[] = [
     ],
   },
 ];
+
