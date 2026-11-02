@@ -6,6 +6,7 @@
 
 import { KHANISHK_CURRICULUM, type CurriculumMonth, type CurriculumWeek, type CurriculumDailyTaskTemplate } from "./curriculum-khanishk";
 import { AKSHAYA_CURRICULUM } from "./curriculum-akshaya";
+import { MONTH_1_DAYS, type Month1DayPlan } from "./curriculum-month1-khanishk";
 import type { ProfileSlug } from "@/types/database";
 
 export const PROGRAMME_START_DATE = "2026-11-08"; // Sunday, 8 Nov 2026
@@ -140,16 +141,146 @@ export function getCurriculumWeek(slug: ProfileSlug | string, weekNumber: number
 }
 
 /**
+ * Returns the exact Month 1 plan for Khanishk from the authoritative PDF curriculum
+ */
+export function getMonth1DayPlan(dayNumber: number): Month1DayPlan | undefined {
+  if (dayNumber >= 1 && dayNumber <= MONTH_1_DAYS.length) {
+    return MONTH_1_DAYS[dayNumber - 1];
+  }
+  return undefined;
+}
+
+/**
  * Generates the concrete daily tasks for a specific date and profile.
  */
 export function getDailyTasksForDate(slug: ProfileSlug | string, dateString: string): GeneratedDailyTask[] {
   const dayInfo = getProgrammeDayInfo(dateString);
-  const weekData = getCurriculumWeek(slug, dayInfo.weekNumber);
+  const isKhanishk = slug !== "akshaya";
 
+  // For Khanishk during Month 1 (Days 1–30), use the authoritative PDF curriculum breakdown
+  if (isKhanishk && dayInfo.dayNumber >= 1 && dayInfo.dayNumber <= 30) {
+    const m1 = MONTH_1_DAYS[dayInfo.dayNumber - 1];
+    if (m1) {
+      if (m1.type === "REST / REVIEW") {
+        return [
+          {
+            id: `m1-d${m1.dayNumber}-t1`,
+            title: `Day ${m1.dayNumber}: ${m1.topic}`,
+            instructions: m1.do,
+            learningObjective: m1.study,
+            expectedDurationMinutes: 30,
+            category: "revision",
+            difficulty: "beginner",
+            requiredResources: "Month 1 Workspace & Study Notes",
+            expectedOutput: m1.save,
+            completionCriteria: "Clean folder structure & rested mind",
+            scheduledDate: dateString,
+            weekNumber: m1.weekNumber,
+            monthNumber: 1,
+            subject: "Python Foundations",
+          },
+        ];
+      }
+
+      if (m1.type === "WEEKLY ASSESSMENT") {
+        return [
+          {
+            id: `m1-d${m1.dayNumber}-t1`,
+            title: `Day ${m1.dayNumber}: ${m1.topic} — Self-Quiz & Review`,
+            instructions: `Study: ${m1.study}. Take self-quiz and review core concepts.`,
+            learningObjective: m1.study,
+            expectedDurationMinutes: 90,
+            category: "assessment",
+            difficulty: "intermediate",
+            requiredResources: "Robo Mates Assessment Portal & Notes",
+            expectedOutput: "Completed quiz score and error analysis",
+            completionCriteria: "Score >= 80% and concepts reviewed",
+            scheduledDate: dateString,
+            weekNumber: m1.weekNumber,
+            monthNumber: 1,
+            subject: "Python Foundations",
+          },
+          {
+            id: `m1-d${m1.dayNumber}-t2`,
+            title: `Day ${m1.dayNumber}: Practical Rebuild & Bug Fix`,
+            instructions: m1.do,
+            learningObjective: `Mastery verification for: ${m1.study}`,
+            expectedDurationMinutes: 120,
+            category: "practical",
+            difficulty: "intermediate",
+            requiredResources: "VS Code / Python 3 / Git",
+            expectedOutput: m1.save,
+            completionCriteria: "Verified code rebuilt without copying and committed",
+            scheduledDate: dateString,
+            weekNumber: m1.weekNumber,
+            monthNumber: 1,
+            subject: "Python Foundations",
+          },
+        ];
+      }
+
+      // Standard Study & Project Days (4–5 hours in structured blocks)
+      const blocks = [
+        {
+          num: 1,
+          name: "Theory & Principles",
+          desc: `Study: ${m1.study}`,
+          dur: 60,
+          cat: "theory" as const,
+        },
+        {
+          num: 2,
+          name: "Guided Hands-On Coding",
+          desc: `Focus on: ${m1.topic}. Implement core syntax patterns and test in interpreter.`,
+          dur: 60,
+          cat: "practical" as const,
+        },
+        {
+          num: 3,
+          name: "Independent Implementation",
+          desc: `Do: ${m1.do}`,
+          dur: 90,
+          cat: (m1.type === "PROJECT" ? "project" : "exercise") as "project" | "exercise",
+        },
+        {
+          num: 4,
+          name: "Artifact Verification & Output",
+          desc: `Save: ${m1.save}`,
+          dur: 60,
+          cat: (m1.type === "PROJECT" ? "project" : "practical") as "project" | "practical",
+        },
+        {
+          num: 5,
+          name: "Review & Daily Reflection",
+          desc: `Check off Day ${m1.dayNumber} checklist items, write technical notes, and commit work.`,
+          dur: 30,
+          cat: "revision" as const,
+        },
+      ];
+
+      return blocks.map((b) => ({
+        id: `m1-d${m1.dayNumber}-b${b.num}`,
+        title: `Day ${m1.dayNumber}: ${m1.topic} — ${b.name}`,
+        instructions: b.desc,
+        learningObjective: m1.study,
+        expectedDurationMinutes: b.dur,
+        category: b.cat,
+        difficulty: b.num >= 3 ? "intermediate" : "beginner",
+        requiredResources: "VS Code / Python 3 / PowerShell",
+        expectedOutput: b.num === 4 ? m1.save : `Block ${b.num} verified study notes`,
+        completionCriteria: `Satisfies Day ${m1.dayNumber} learning objective`,
+        scheduledDate: dateString,
+        weekNumber: m1.weekNumber,
+        monthNumber: 1,
+        subject: m1.type === "PROJECT" ? "Robot Mission Logger" : "Python Foundations",
+      }));
+    }
+  }
+
+  const weekData = getCurriculumWeek(slug, dayInfo.weekNumber);
   if (!weekData) return [];
 
   const { week, month } = weekData;
-  const isKhanishk = slug !== "akshaya";
 
   // Filter tasks designed for this day of week (1 to 7)
   let dayTasks = week.dailyTasks.filter((t) => t.dayOfWeek === dayInfo.dayOfWeek);

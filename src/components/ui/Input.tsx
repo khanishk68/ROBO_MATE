@@ -44,6 +44,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             className={cn(
               "input-field text-sm",
+              leftIcon ? "!pl-11" : "pl-3.5",
+              rightIcon ? "!pr-11" : "pr-3.5",
               error && "border-red-500 focus:border-red-500",
               className
             )}

@@ -22,6 +22,78 @@ interface ResourcesClientProps {
 }
 
 const CURATED_DEFAULT_RESOURCES: Omit<StudyResource, "id" | "created_at" | "updated_at">[] = [
+  // Month 1 Official Verified Learning Sources
+  {
+    owner_id: "boy",
+    module_id: null,
+    title: "Python Official Tutorial",
+    description: "Main reference for syntax, data structures, modules, file I/O, and classes. Read matching sections after daily lessons.",
+    resource_type: "tutorial",
+    resource_url: "https://docs.python.org/3/tutorial/",
+    file_path: null,
+    tags: ["Month 1", "Python", "Syntax", "Official"],
+  },
+  {
+    owner_id: "boy",
+    module_id: null,
+    title: "Python Official Getting Started",
+    description: "Beginner-friendly entry point and installation guidance for Windows systems.",
+    resource_type: "website",
+    resource_url: "https://www.python.org/about/gettingstarted/",
+    file_path: null,
+    tags: ["Month 1", "Python", "Setup"],
+  },
+  {
+    owner_id: "boy",
+    module_id: null,
+    title: "Harvard CS50P — Introduction to Programming with Python",
+    description: "Top-tier video lectures, problem sets, and interactive exercises covering functions, loops, and OOP.",
+    resource_type: "tutorial",
+    resource_url: "https://cs50.harvard.edu/python/",
+    file_path: null,
+    tags: ["Month 1", "Python", "CS50", "Harvard"],
+  },
+  {
+    owner_id: "boy",
+    module_id: null,
+    title: "Pro Git Book (Official Free Edition)",
+    description: "Definitive Git reference by Scott Chacon. Focus on Chapter 1 (Getting Started) and Chapter 2 (Git Basics).",
+    resource_type: "book",
+    resource_url: "https://git-scm.com/book/en/v2",
+    file_path: null,
+    tags: ["Month 1", "Git", "Version Control", "Book"],
+  },
+  {
+    owner_id: "boy",
+    module_id: null,
+    title: "GitHub Skills Interactive Courses",
+    description: "Hands-on browser-based practice for initializing repositories, committing, branching, and pushing code.",
+    resource_type: "tutorial",
+    resource_url: "https://skills.github.com/",
+    file_path: null,
+    tags: ["Month 1", "GitHub", "Interactive"],
+  },
+  {
+    owner_id: "boy",
+    module_id: null,
+    title: "Microsoft PowerShell Documentation",
+    description: "Official guide to navigating Windows directory trees, inspecting environment variables, and running scripts.",
+    resource_type: "website",
+    resource_url: "https://learn.microsoft.com/powershell/",
+    file_path: null,
+    tags: ["Month 1", "Terminal", "PowerShell", "CLI"],
+  },
+  {
+    owner_id: "boy",
+    module_id: null,
+    title: "Exercism Python Track",
+    description: "Free automated mentor-reviewed coding exercises to build fluency with syntax, lists, strings, and dictionaries.",
+    resource_type: "tutorial",
+    resource_url: "https://exercism.org/tracks/python",
+    file_path: null,
+    tags: ["Month 1", "Python", "Coding Practice"],
+  },
+
   // Robotics Engineering resources
   {
     owner_id: "boy",

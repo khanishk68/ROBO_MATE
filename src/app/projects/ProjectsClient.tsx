@@ -13,6 +13,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Input, Textarea, Select } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toaster";
 import { createClient } from "@/lib/supabase/client";
+import { RobotMissionLoggerView } from "./RobotMissionLoggerView";
 import type { Project, ProjectTask, ProjectAttachment, ProjectNote, Profile, TaskStatus, Priority } from "@/types/database";
 
 interface ProjectsClientProps {
@@ -45,6 +46,7 @@ export function ProjectsClient({ userId, project, profiles }: ProjectsClientProp
   const { success, error: showError } = useToast();
   const supabase = createClient();
 
+  const [selectedProject, setSelectedProject] = useState<"logger" | "amr">("logger");
   const [activeTab, setActiveTab] = useState<"tasks" | "notes" | "attachments">("tasks");
   const [filterOwner, setFilterOwner] = useState<"all" | "boy" | "girl">("all");
 
@@ -132,15 +134,51 @@ export function ProjectsClient({ userId, project, profiles }: ProjectsClientProp
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-6xl mx-auto pb-16 w-full min-w-0">
-      {/* Project Banner */}
+      {/* Project Switcher Header */}
       <div
-        className="rounded-2xl sm:rounded-3xl border p-4 sm:p-8 relative overflow-hidden w-full min-w-0"
+        className="flex p-1.5 rounded-2xl border gap-2 w-full max-w-md mx-auto"
         style={{
-          background: "var(--gradient-card)",
+          background: "var(--bg-card)",
           borderColor: "var(--border-color)",
-          boxShadow: "var(--shadow-glow)",
         }}
       >
+        <button
+          type="button"
+          onClick={() => setSelectedProject("logger")}
+          className="flex-1 py-2 px-3 text-xs font-bold rounded-xl transition-all"
+          style={{
+            background: selectedProject === "logger" ? "var(--primary)" : "transparent",
+            color: selectedProject === "logger" ? "#ffffff" : "var(--text-muted)",
+          }}
+        >
+          Month 1: Mission Logger
+        </button>
+        <button
+          type="button"
+          onClick={() => setSelectedProject("amr")}
+          className="flex-1 py-2 px-3 text-xs font-bold rounded-xl transition-all"
+          style={{
+            background: selectedProject === "amr" ? "var(--primary)" : "transparent",
+            color: selectedProject === "amr" ? "#ffffff" : "var(--text-muted)",
+          }}
+        >
+          12-Month: Shared AMR
+        </button>
+      </div>
+
+      {selectedProject === "logger" ? (
+        <RobotMissionLoggerView userId={userId} />
+      ) : (
+        <>
+          {/* Project Banner */}
+          <div
+            className="rounded-2xl sm:rounded-3xl border p-4 sm:p-8 relative overflow-hidden w-full min-w-0"
+            style={{
+              background: "var(--gradient-card)",
+              borderColor: "var(--border-color)",
+              boxShadow: "var(--shadow-glow)",
+            }}
+          >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
           <div>
             <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -462,6 +500,8 @@ export function ProjectsClient({ userId, project, profiles }: ProjectsClientProp
           </div>
         </div>
       </Modal>
+        </>
+      )}
     </div>
   );
 }

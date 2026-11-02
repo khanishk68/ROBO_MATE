@@ -362,6 +362,38 @@ export interface Database {
         Insert: Omit<Database["public"]["Tables"]["journey_settings"]["Row"], "id" | "created_at" | "updated_at">;
         Update: Partial<Database["public"]["Tables"]["journey_settings"]["Insert"]>;
       };
+      daily_checklist_progress: {
+        Row: {
+          id: string;
+          profile_id: string;
+          day_number: number;
+          item_id: string;
+          is_completed: boolean;
+          completed_at: string | null;
+          notes: string | null;
+          evidence_url: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["daily_checklist_progress"]["Row"], "id" | "created_at" | "updated_at">;
+        Update: Partial<Database["public"]["Tables"]["daily_checklist_progress"]["Insert"]>;
+      };
+      uploaded_documents: {
+        Row: {
+          id: string;
+          profile_id: string | null;
+          file_name: string;
+          file_size: number;
+          file_url: string;
+          storage_path: string;
+          month_number: number;
+          subject: string;
+          description: string | null;
+          created_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["uploaded_documents"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["uploaded_documents"]["Insert"]>;
+      };
     };
     Views: {};
     Functions: {};
@@ -402,6 +434,8 @@ export type ProjectAttachment = Database["public"]["Tables"]["project_attachment
 export type ProjectNote = Database["public"]["Tables"]["project_notes"]["Row"];
 export type StudyResource = Database["public"]["Tables"]["study_resources"]["Row"];
 export type JourneySettings = Database["public"]["Tables"]["journey_settings"]["Row"];
+export type DailyChecklistProgress = Database["public"]["Tables"]["daily_checklist_progress"]["Row"];
+export type UploadedDocument = Database["public"]["Tables"]["uploaded_documents"]["Row"];
 
 // Extended types with joins
 export type TaskOccurrenceWithTask = TaskOccurrence & {

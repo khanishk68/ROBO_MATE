@@ -12,6 +12,7 @@ import {
   BarChart3,
   FolderKanban,
   BookOpen,
+  FileText,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -24,15 +25,15 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navItems = [
-  { href: "/dashboard",       label: "Dashboard",        icon: LayoutDashboard },
-  { href: "/planner",         label: "Daily Planner",    icon: CalendarDays },
-  { href: "/roadmap",         label: "My Roadmap",       icon: Map },
-  { href: "/ai-tutor",        label: "AI Tutor",         icon: Bot },
-  { href: "/shared-journey",  label: "Shared Journey",   icon: Users },
-  { href: "/progress",        label: "Progress Centre",  icon: BarChart3 },
-  { href: "/projects",        label: "Projects",         icon: FolderKanban },
-  { href: "/resources",       label: "Study Resources",  icon: BookOpen },
-  { href: "/settings",        label: "Settings",         icon: Settings },
+  { href: "/dashboard",  label: "Dashboard",       icon: LayoutDashboard },
+  { href: "/roadmap",    label: "My Roadmap",      icon: Map },
+  { href: "/planner",    label: "Daily Planner",   icon: CalendarDays },
+  { href: "/curriculum", label: "Curriculum",      icon: BookOpen },
+  { href: "/library",    label: "Study Library",   icon: FileText },
+  { href: "/projects",   label: "Projects",        icon: FolderKanban },
+  { href: "/progress",   label: "Progress",        icon: BarChart3 },
+  { href: "/ai-tutor",   label: "AI Tutor",        icon: Bot },
+  { href: "/settings",   label: "Settings",        icon: Settings },
 ];
 
 export function Sidebar() {

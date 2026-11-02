@@ -483,3 +483,57 @@ USING (true) WITH CHECK (true);
 DROP POLICY IF EXISTS "Notifications access" ON public.notifications;
 CREATE POLICY "Notifications access" ON public.notifications FOR ALL TO authenticated
 USING (true) WITH CHECK (true);
+
+-- =============================================================================
+-- 23. DAILY CHECKLIST PROGRESS & STUDY LIBRARY STORAGE
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS public.daily_checklist_progress (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    profile_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+    day_number INTEGER NOT NULL CHECK (day_number BETWEEN 1 AND 365),
+    item_id TEXT NOT NULL,
+    is_completed BOOLEAN NOT NULL DEFAULT false,
+    completed_at TIMESTAMPTZ,
+    notes TEXT,
+    evidence_url TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now()),
+    UNIQUE(profile_id, day_number, item_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_checklist_profile_day 
+    ON public.daily_checklist_progress(profile_id, day_number);
+
+CREATE TABLE IF NOT EXISTS public.uploaded_documents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    profile_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    file_name TEXT NOT NULL,
+    file_size INTEGER NOT NULL,
+    file_url TEXT NOT NULL,
+    storage_path TEXT NOT NULL,
+    month_number INTEGER NOT NULL DEFAULT 1,
+    subject TEXT NOT NULL DEFAULT 'Robotics Engineering Foundation',
+    description TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_docs_profile_month 
+    ON public.uploaded_documents(profile_id, month_number);
+
+ALTER TABLE public.daily_checklist_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.uploaded_documents ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Checklist access" ON public.daily_checklist_progress;
+CREATE POLICY "Checklist access" ON public.daily_checklist_progress FOR ALL TO authenticated
+USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Documents access" ON public.uploaded_documents;
+CREATE POLICY "Documents access" ON public.uploaded_documents FOR ALL TO authenticated
+USING (true) WITH CHECK (true);
+
+-- Storage bucket for study materials
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('study-materials', 'study-materials', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+

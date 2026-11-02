@@ -5,7 +5,8 @@ import Link from "next/link";
 import {
   Flame, Clock, Target, CheckCircle2, AlertCircle,
   ArrowRight, Bot, Rocket, Calendar, TrendingUp, Zap,
-  BookOpen, ChevronRight, Sparkles, Layers, Palette, Cpu
+  BookOpen, ChevronRight, Sparkles, Layers, Palette, Cpu,
+  FileText, ExternalLink, Circle
 } from "lucide-react";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { ProgressBar, CircularProgress } from "@/components/ui/ProgressBar";
@@ -14,7 +15,9 @@ import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { getGreeting, formatDuration, getProgressPercentage } from "@/lib/utils";
-import { getProgrammeDayInfo, getDailyTasksForDate } from "@/lib/curriculum-engine";
+import { getProgrammeDayInfo, getDailyTasksForDate, getMonth1DayPlan } from "@/lib/curriculum-engine";
+import { useChecklistProgress } from "@/hooks/useChecklistProgress";
+import { MONTH_1_METADATA, MONTH_1_DAYS } from "@/lib/curriculum-month1-khanishk";
 import type { Profile, TaskOccurrence, StudyTask, DailyCheckin, RoadmapModule, Project } from "@/types/database";
 import { WeeklyChart } from "./WeeklyChart";
 import { HeatmapCalendar } from "./HeatmapCalendar";
@@ -46,6 +49,32 @@ export function DashboardClient({
   const isKhanishk = effectiveSlug === "khanishk";
 
   const dayInfo = useMemo(() => getProgrammeDayInfo(today), [today]);
+
+  const {
+    isItemCompleted,
+    toggleItem,
+    getDayProgress: getChecklistDayProgress,
+    getMonthProgress: getChecklistMonthProgress,
+  } = useChecklistProgress(currentProfile?.id);
+
+  const month1Day = useMemo(() => {
+    if (isKhanishk && dayInfo.dayNumber >= 1 && dayInfo.dayNumber <= 30) {
+      return getMonth1DayPlan(dayInfo.dayNumber);
+    }
+    return undefined;
+  }, [isKhanishk, dayInfo.dayNumber]);
+
+  const nextDay = useMemo(() => {
+    if (isKhanishk && dayInfo.dayNumber < 30) {
+      return getMonth1DayPlan(dayInfo.dayNumber + 1);
+    }
+    return undefined;
+  }, [isKhanishk, dayInfo.dayNumber]);
+
+  const monthProgress = getChecklistMonthProgress();
+  const dayChecklistProgress = month1Day
+    ? getChecklistDayProgress(month1Day.dayNumber, month1Day.checklistItems.length)
+    : { completed: 0, total: 0, percentage: 0 };
 
   // If DB occurrences are empty for today, fallback to 365-day curriculum daily tasks
   const effectiveTasks = useMemo(() => {
@@ -84,9 +113,9 @@ export function DashboardClient({
   }, [todayOccurrences, effectiveSlug, today, currentProfile?.id]);
 
   // Stats computation
-  const completed = effectiveTasks.filter((o) => o.status === "completed").length;
-  const total = effectiveTasks.length;
-  const todayPct = getProgressPercentage(completed, total);
+  const completed = month1Day ? dayChecklistProgress.completed : effectiveTasks.filter((o) => o.status === "completed").length;
+  const total = month1Day ? dayChecklistProgress.total : effectiveTasks.length;
+  const todayPct = month1Day ? dayChecklistProgress.percentage : getProgressPercentage(completed, total);
 
   const todayMinutes = effectiveTasks
     .filter((o) => o.status === "completed")
@@ -247,22 +276,76 @@ export function DashboardClient({
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span
+                    className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded border"
+                    style={{
+                      background: "var(--bg-secondary)",
+                      borderColor: "var(--border-color)",
+                      color: "var(--primary)",
+                    }}
+                  >
+                    Day {dayInfo.dayNumber} of 30
+                  </span>
+                  <span className="text-[11px] font-semibold text-sky-400">
+                    {month1Day ? month1Day.topic : `Week ${dayInfo.weekNumber}`}
+                  </span>
+                </div>
                 <h3 className="font-bold text-base" style={{ color: "var(--text-primary)" }}>
                   Today&apos;s Curriculum Checklist
                 </h3>
-                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                  Week {dayInfo.weekNumber}: {dayInfo.isRestDay ? "Weekly Assessment & Rest Day" : "Active Robotics Study"}
-                </p>
               </div>
-              <Link href="/planner">
-                <button className="text-xs font-semibold flex items-center gap-1 hover:underline" style={{ color: "var(--primary)" }}>
-                  Planner <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href="/curriculum">
+                  <button className="text-xs font-semibold flex items-center gap-1 hover:underline" style={{ color: "var(--text-muted)" }}>
+                    Curriculum <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </Link>
+                <Link href="/planner">
+                  <button className="text-xs font-semibold flex items-center gap-1 hover:underline" style={{ color: "var(--primary)" }}>
+                    Planner <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </Link>
+              </div>
             </div>
           </CardHeader>
-          <CardBody className="space-y-2 max-h-72 overflow-y-auto">
-            {effectiveTasks.length === 0 ? (
+          <CardBody className="space-y-2 max-h-80 overflow-y-auto">
+            {month1Day ? (
+              month1Day.checklistItems.map((item) => {
+                const checked = isItemCompleted(month1Day.dayNumber, item.id);
+                return (
+                  <label
+                    key={item.id}
+                    className="flex items-start gap-3 p-2.5 rounded-xl border cursor-pointer select-none transition-all"
+                    style={{
+                      background: checked ? "var(--bg-secondary)" : "var(--bg-card)",
+                      borderColor: checked ? "var(--primary)40" : "var(--border-color)",
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleItem(month1Day.dayNumber, item.id);
+                    }}
+                  >
+                    <div className="mt-0.5 flex-shrink-0">
+                      {checked ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      ) : (
+                        <Circle className="w-4 h-4" style={{ color: "var(--text-muted)" }} />
+                      )}
+                    </div>
+                    <span
+                      className="text-xs sm:text-sm leading-relaxed flex-1"
+                      style={{
+                        color: checked ? "var(--text-muted)" : "var(--text-primary)",
+                        textDecoration: checked ? "line-through" : "none",
+                      }}
+                    >
+                      {item.text}
+                    </span>
+                  </label>
+                );
+              })
+            ) : effectiveTasks.length === 0 ? (
               <EmptyState
                 icon={<Calendar className="w-8 h-8" />}
                 title="No tasks scheduled"
@@ -276,6 +359,117 @@ export function DashboardClient({
             )}
           </CardBody>
         </Card>
+      </div>
+
+      {/* Curriculum Spotlight Hub: Next Topic, Capstone Project & Library */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Next Upcoming Topic */}
+        <div
+          className="p-4 sm:p-5 rounded-2xl border flex flex-col justify-between gap-3"
+          style={{
+            background: "var(--bg-card)",
+            borderColor: "var(--border-color)",
+          }}
+        >
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-sky-400 uppercase tracking-wider">
+              <Calendar className="w-3.5 h-3.5" />
+              Next Upcoming Topic
+            </div>
+            {nextDay ? (
+              <div>
+                <h4 className="font-bold text-sm sm:text-base text-slate-100">
+                  Day {nextDay.dayNumber}: {nextDay.topic}
+                </h4>
+                <p className="text-xs mt-1 line-clamp-2" style={{ color: "var(--text-secondary)" }}>
+                  {nextDay.study}
+                </p>
+                <span className="inline-block mt-2 text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">
+                  {nextDay.hours} Hours • {nextDay.type}
+                </span>
+              </div>
+            ) : (
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                Completing Month 1 Foundations!
+              </p>
+            )}
+          </div>
+          <Link
+            href={nextDay ? `/planner?date=${nextDay.date}` : "/curriculum"}
+            className="text-xs font-semibold flex items-center gap-1 hover:underline pt-2 border-t"
+            style={{ color: "var(--primary)", borderColor: "var(--border-color)" }}
+          >
+            Preview Tomorrow&apos;s Plan <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+
+        {/* Current Project: Robot Mission Logger v1 */}
+        <div
+          className="p-4 sm:p-5 rounded-2xl border flex flex-col justify-between gap-3"
+          style={{
+            background: "var(--bg-card)",
+            borderColor: "var(--border-color)",
+          }}
+        >
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-purple-400 uppercase tracking-wider">
+              <Zap className="w-3.5 h-3.5" />
+              Month 1 Capstone Project
+            </div>
+            <div>
+              <h4 className="font-bold text-sm sm:text-base text-slate-100">
+                Robot Mission Logger v1
+              </h4>
+              <p className="text-xs mt-1 line-clamp-2" style={{ color: "var(--text-secondary)" }}>
+                CLI application in Python with validation, CSV/JSON persistence, and 10-test scenario checklist.
+              </p>
+              <span className="inline-block mt-2 text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                Days 27–30 • Target: 17 Hours
+              </span>
+            </div>
+          </div>
+          <Link
+            href="/projects"
+            className="text-xs font-semibold flex items-center gap-1 hover:underline pt-2 border-t"
+            style={{ color: "var(--primary)", borderColor: "var(--border-color)" }}
+          >
+            View Project Specifications <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+
+        {/* Study Library & PDF Access */}
+        <div
+          className="p-4 sm:p-5 rounded-2xl border flex flex-col justify-between gap-3"
+          style={{
+            background: "var(--bg-card)",
+            borderColor: "var(--border-color)",
+          }}
+        >
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 uppercase tracking-wider">
+              <FileText className="w-3.5 h-3.5" />
+              Study Library &amp; PDFs
+            </div>
+            <div>
+              <h4 className="font-bold text-sm sm:text-base text-slate-100">
+                Month 1 Official Curriculum PDF
+              </h4>
+              <p className="text-xs mt-1 line-clamp-2" style={{ color: "var(--text-secondary)" }}>
+                Authoritative 6-page study plan: software checklist, 7 verified study sources, and daily breakdowns.
+              </p>
+              <span className="inline-block mt-2 text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                43 KB • Ready for in-browser reading
+              </span>
+            </div>
+          </div>
+          <Link
+            href="/library"
+            className="text-xs font-semibold flex items-center gap-1 hover:underline pt-2 border-t"
+            style={{ color: "var(--primary)", borderColor: "var(--border-color)" }}
+          >
+            Open in PDF Reader <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
       </div>
 
       {/* Overdue alert */}

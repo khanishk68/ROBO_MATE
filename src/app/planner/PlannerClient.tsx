@@ -18,7 +18,8 @@ import { useToast } from "@/components/ui/Toaster";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { formatDuration, getProgressPercentage } from "@/lib/utils";
-import { getProgrammeDayInfo, getDailyTasksForDate, type GeneratedDailyTask } from "@/lib/curriculum-engine";
+import { getProgrammeDayInfo, getDailyTasksForDate, getMonth1DayPlan, type GeneratedDailyTask } from "@/lib/curriculum-engine";
+import { useChecklistProgress } from "@/hooks/useChecklistProgress";
 import type { Profile, Priority, TaskStatus } from "@/types/database";
 
 interface PlannerClientProps {
@@ -125,6 +126,20 @@ export function PlannerClient({ userId, profile: initialProfile, modules, today 
   const supabase = createClient();
 
   const dayInfo = useMemo(() => getProgrammeDayInfo(selectedDate), [selectedDate]);
+
+  const {
+    isItemCompleted,
+    toggleItem,
+    getDayProgress: getChecklistDayProgress,
+    getMonthProgress: getChecklistMonthProgress,
+  } = useChecklistProgress(effectiveProfileId);
+
+  const month1Plan = useMemo(() => {
+    if (effectiveSlug === "khanishk" && dayInfo.dayNumber >= 1 && dayInfo.dayNumber <= 30) {
+      return getMonth1DayPlan(dayInfo.dayNumber);
+    }
+    return undefined;
+  }, [effectiveSlug, dayInfo.dayNumber]);
 
   // Timer Tick
   useEffect(() => {
@@ -683,6 +698,133 @@ export function PlannerClient({ userId, profile: initialProfile, modules, today 
               >
                 <Check className="w-3.5 h-3.5" /> Complete Task
               </Button>
+            </div>
+          </CardBody>
+        </Card>
+      )}
+
+      {/* Official Month 1 Daily Study Checklist from Authoritative Curriculum */}
+      {month1Plan && (
+        <Card className="border-2 overflow-hidden shadow-lg" style={{ borderColor: "var(--border-color)" }}>
+          <CardHeader
+            className="p-4 sm:p-5 border-b"
+            style={{
+              background: "var(--bg-secondary)",
+              borderColor: "var(--border-color)",
+            }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span
+                    className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border"
+                    style={{
+                      background: "var(--bg-card)",
+                      borderColor: "var(--border-color)",
+                      color: "var(--primary)",
+                    }}
+                  >
+                    DAY {month1Plan.dayNumber.toString().padStart(2, "0")} • {month1Plan.type}
+                  </span>
+                  <span className="text-xs font-semibold text-sky-400">
+                    {month1Plan.hours > 0 ? `${month1Plan.hours} Planned Hours` : "Rest & Review"}
+                  </span>
+                </div>
+                <h3 className="font-bold text-base sm:text-lg" style={{ color: "var(--text-primary)" }}>
+                  {month1Plan.topic}
+                </h3>
+              </div>
+
+              {/* Day's Checklist Progress Badge */}
+              {(() => {
+                const prog = getChecklistDayProgress(month1Plan.dayNumber, month1Plan.checklistItems.length);
+                return (
+                  <div
+                    className="px-3 py-1.5 rounded-xl border flex items-center gap-2 flex-shrink-0"
+                    style={{
+                      background: "var(--bg-card)",
+                      borderColor: "var(--border-color)",
+                    }}
+                  >
+                    <div className="text-right">
+                      <p className="text-xs font-bold" style={{ color: prog.completed === prog.total ? "#34D399" : "var(--primary)" }}>
+                        {prog.completed}/{prog.total} Checked
+                      </p>
+                      <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                        {prog.percentage}% Complete
+                      </p>
+                    </div>
+                    {prog.completed === prog.total ? (
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                    ) : (
+                      <div className="w-5 h-5 rounded-full border-2 border-dashed flex items-center justify-center text-[10px] text-slate-400">
+                        {prog.completed}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          </CardHeader>
+
+          <CardBody className="p-4 sm:p-5 space-y-4">
+            {/* 3 Pillars Summary: Study, Do, Save */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+              <div className="p-3 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+                <span className="font-bold text-sky-400 block mb-0.5">Study Subtopics:</span>
+                <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{month1Plan.study}</p>
+              </div>
+              <div className="p-3 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+                <span className="font-bold text-amber-400 block mb-0.5">Practical Lab / Coding:</span>
+                <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{month1Plan.do}</p>
+              </div>
+              <div className="p-3 rounded-xl border" style={{ background: "var(--bg-secondary)", borderColor: "var(--border-color)" }}>
+                <span className="font-bold text-emerald-400 block mb-0.5">Deliverable to Save:</span>
+                <p className="text-[11px] leading-relaxed font-mono" style={{ color: "var(--text-secondary)" }}>{month1Plan.save}</p>
+              </div>
+            </div>
+
+            {/* Checklist Checkboxes */}
+            <div className="space-y-2 pt-1">
+              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
+                Actionable Daily Checklist (Independent Checkboxes)
+              </p>
+              <div className="space-y-2">
+                {month1Plan.checklistItems.map((item) => {
+                  const checked = isItemCompleted(month1Plan.dayNumber, item.id);
+                  return (
+                    <label
+                      key={item.id}
+                      className="flex items-start gap-3 p-3 rounded-xl border cursor-pointer select-none transition-all"
+                      style={{
+                        background: checked ? "var(--bg-secondary)" : "var(--bg-card)",
+                        borderColor: checked ? "var(--primary)40" : "var(--border-color)",
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleItem(month1Plan.dayNumber, item.id);
+                      }}
+                    >
+                      <div className="mt-0.5 flex-shrink-0">
+                        {checked ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        ) : (
+                          <div className="w-4 h-4 rounded-full border border-slate-500" />
+                        )}
+                      </div>
+                      <span
+                        className="text-xs sm:text-sm leading-relaxed flex-1"
+                        style={{
+                          color: checked ? "var(--text-muted)" : "var(--text-primary)",
+                          textDecoration: checked ? "line-through" : "none",
+                        }}
+                      >
+                        {item.text}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
             </div>
           </CardBody>
         </Card>

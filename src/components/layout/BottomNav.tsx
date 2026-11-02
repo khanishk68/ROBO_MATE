@@ -8,20 +8,18 @@ import {
   CalendarDays,
   Map,
   Bot,
-  Users,
-  BarChart3,
   FolderKanban,
   BookOpen,
-  Settings,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/dashboard",      label: "Home",      icon: LayoutDashboard },
-  { href: "/planner",        label: "Planner",   icon: CalendarDays },
-  { href: "/roadmap",        label: "Roadmap",   icon: Map },
-  { href: "/ai-tutor",       label: "AI Tutor",  icon: Bot },
-  { href: "/progress",       label: "Progress",  icon: BarChart3 },
+  { href: "/dashboard",   label: "Home",        icon: LayoutDashboard },
+  { href: "/curriculum",  label: "Curriculum",  icon: BookOpen },
+  { href: "/planner",     label: "Planner",     icon: CalendarDays },
+  { href: "/library",     label: "Library",     icon: FileText },
+  { href: "/projects",    label: "Projects",    icon: FolderKanban },
 ];
 
 export function BottomNav() {

@@ -369,6 +369,32 @@ export function RoadmapClient({
                     className="p-5 border-t space-y-6"
                     style={{ background: "var(--bg-secondary)40", borderColor: "var(--border-color)" }}
                   >
+                    {/* Month 1 Official 30-Day Plan Spotlight */}
+                    {m.monthNumber === 1 && activeSlug === "khanishk" && (
+                      <div
+                        className="p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md"
+                        style={{
+                          background: "rgba(37,99,235,0.12)",
+                          borderColor: "rgba(56,189,248,0.4)",
+                        }}
+                      >
+                        <div>
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-sky-400">
+                            <Sparkles className="w-4 h-4" />
+                            <span>Official Month 1 Curriculum Available (30 Individual Days)</span>
+                          </div>
+                          <p className="text-xs text-slate-300 mt-1">
+                            8 Nov – 7 Dec 2026: Python foundations, Git, Linux CLI, daily checklists, 7 verified study resources, and Robot Mission Logger v1 (₹0 hardware).
+                          </p>
+                        </div>
+                        <Link href="/curriculum">
+                          <Button size="sm" className="font-bold whitespace-nowrap shadow-md">
+                            Open 30-Day Checklist →
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+
                     {/* Objectives & Assessment Criteria */}
                     <div className="grid md:grid-cols-2 gap-4">
                       {/* Learning Objectives */}
